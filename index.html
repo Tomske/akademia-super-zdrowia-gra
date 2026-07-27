@@ -2,15 +2,160 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Misja: Prawdziwa Energia</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="description" content="Misja: Prawdziwa Energia. Gra Akademii Super Zdrowia: pomóż drużynie pokonać Glutona X i odblokuj komiks. Bez logowania i bez zbierania danych." />
+  <meta name="theme-color" content="#131f4a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Misja Energia" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <title>Misja: Prawdziwa Energia — Akademia Super Zdrowia</title>
+  <link rel="stylesheet" href="css/game.css" />
 </head>
 <body>
-  <main id="game">
-    <section id="stage" class="stage"></section>
-  </main>
+  <div id="app">
 
-  <script src="game.js"></script>
+    <!-- ŁADOWANIE -->
+    <section id="screen-loading" class="screen visible">
+      <div class="load-box">
+        <div class="load-bolt" aria-hidden="true">
+          <svg viewBox="0 0 512 512" width="86" height="86"><path d="M300 40 L120 300 L230 300 L200 472 L392 210 L280 210 Z" fill="#ffc300" stroke="#8a5a00" stroke-width="14" stroke-linejoin="round"/></svg>
+        </div>
+        <h1>Misja: Prawdziwa Energia</h1>
+        <div class="load-bar"><div id="load-fill"></div></div>
+        <p id="load-note">Ładowanie Akademii…</p>
+      </div>
+    </section>
+
+    <!-- TYTUŁ -->
+    <section id="screen-title" class="screen">
+      <div class="title-bg" aria-hidden="true"></div>
+      <div class="title-inner">
+        <p class="title-kicker">Akademia Super Zdrowia</p>
+        <h1 class="title-logo">Misja:<br/>Prawdziwa Energia</h1>
+        <p class="title-sub">Gluton X zaatakował szkołę. Drużyna potrzebuje Ciebie!</p>
+        <div class="title-buttons">
+          <button id="btn-play" class="btn btn-big btn-gold">▶ Graj</button>
+          <button id="btn-install" class="btn btn-ghost hidden">Zainstaluj aplikację</button>
+          <button id="btn-help" class="btn btn-ghost">Jak grać i instalować?</button>
+        </div>
+        <p class="title-note">Bez logowania. Bez reklam. Postęp zapisuje się na tym urządzeniu.</p>
+      </div>
+      <button id="btn-sound" class="round-btn sound-btn" aria-label="Dźwięk"></button>
+    </section>
+
+    <!-- FABUŁA (panele) -->
+    <section id="screen-story" class="screen">
+      <div class="story-frame">
+        <div class="story-img"><img id="story-img" alt="" /></div>
+        <div class="story-text">
+          <p id="story-text"></p>
+          <button id="btn-story-next" class="btn btn-gold">Dalej ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAPA MISJI -->
+    <section id="screen-map" class="screen">
+      <div class="map-bg" aria-hidden="true"></div>
+      <header class="map-top">
+        <div class="hud-chip" id="hud-power" title="Zdrowomoc">⚡ 0</div>
+        <div class="hud-chip" id="hud-stars">★ 0/15</div>
+        <div class="map-top-right">
+          <button id="btn-sound-map" class="round-btn sound-btn" aria-label="Dźwięk"></button>
+        </div>
+      </header>
+      <h2 class="map-title">Naładuj Kryształ Akademii</h2>
+      <div id="crystal" class="crystal" title="Kryształ Prawdziwej Energii">
+        <svg viewBox="0 0 100 120" width="74" height="89">
+          <polygon id="crystal-shape" points="50,4 88,40 74,112 26,112 12,40" fill="#2b3b7a" stroke="#9db3ff" stroke-width="4" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <nav id="map-nodes" class="map-nodes" aria-label="Misje"></nav>
+      <footer class="map-foot"><span id="map-hint">Wybierz misję!</span></footer>
+    </section>
+
+    <!-- GRA -->
+    <section id="screen-game" class="screen">
+      <header class="game-top">
+        <button id="btn-quit" class="round-btn" aria-label="Wróć do mapy">✕</button>
+        <div id="game-title" class="game-title-chip"></div>
+        <div id="game-stats" class="game-stats"></div>
+      </header>
+      <div id="arena" class="arena"></div>
+    </section>
+
+    <!-- NAGRODA -->
+    <section id="screen-reward" class="screen">
+      <div class="reward-bg" aria-hidden="true"></div>
+      <div class="reward-inner">
+        <div class="badge-wrap">
+          <svg viewBox="0 0 120 120" width="110" height="110" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" fill="#ffc300" stroke="#8a5a00" stroke-width="6"/>
+            <circle cx="60" cy="60" r="40" fill="#fff4cd"/>
+            <path d="M68 22 L38 66 L56 66 L51 96 L83 52 L64 52 Z" fill="#e5641b"/>
+          </svg>
+        </div>
+        <h2>Strażnik Prawdziwej Energii!</h2>
+        <p class="reward-lead">Gluton X uciekł, a Kryształ Akademii znów świeci. W nagrodę odblokowujesz <b>komiks — część 1</b>!</p>
+        <div class="reward-comic">
+          <img src="assets/img/comic-cz1-cover.webp" alt="Okładka: Atak Glutona X, część 1" />
+          <div class="reward-comic-btns">
+            <a id="btn-comic-read" class="btn btn-gold" href="assets/komiks/akademia-super-zdrowia-cz1.pdf" target="_blank" rel="noopener">Czytaj komiks</a>
+            <a id="btn-comic-dl" class="btn btn-ghost" href="assets/komiks/akademia-super-zdrowia-cz1.pdf" download="Akademia-Super-Zdrowia-cz1.pdf">Pobierz PDF</a>
+            <a id="btn-shop" class="btn btn-ghost" href="https://payhip.com/AkademiaSuperZdrowia" target="_blank" rel="noopener">Dalsze przygody drużyny →</a>
+          </div>
+        </div>
+        <button id="btn-reward-map" class="btn btn-big">Wróć do mapy</button>
+      </div>
+    </section>
+
+    <!-- WSPÓLNE NAKŁADKI -->
+    <div id="dialog" class="overlay hidden">
+      <div class="dialog-box">
+        <div class="dialog-portrait"><img id="dialog-img" alt="" /></div>
+        <div class="dialog-body">
+          <p id="dialog-name" class="dialog-name"></p>
+          <p id="dialog-text" class="dialog-text"></p>
+          <button id="btn-dialog-next" class="btn btn-gold btn-small">Dalej ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result" class="overlay hidden">
+      <div class="result-box">
+        <h3 id="result-title"></h3>
+        <div id="result-stars" class="result-stars"></div>
+        <p id="result-score" class="result-score"></p>
+        <div id="result-wiedza" class="wiedza-card"></div>
+        <div class="result-btns">
+          <button id="btn-result-retry" class="btn btn-ghost">↻ Jeszcze raz</button>
+          <button id="btn-result-next" class="btn btn-gold"></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal" class="overlay hidden">
+      <div class="modal-box">
+        <button id="btn-modal-close" class="round-btn modal-close" aria-label="Zamknij">✕</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
+    <div id="fx-layer" aria-hidden="true"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game-catch.js"></script>
+  <script src="js/game-sort.js"></script>
+  <script src="js/game-sleep.js"></script>
+  <script src="js/game-run.js"></script>
+  <script src="js/game-boss.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
