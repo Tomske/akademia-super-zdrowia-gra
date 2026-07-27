@@ -1,0 +1,26 @@
+2. JAK URUCHOMIĆ GRĘ?
+
+1. Rozpakuj paczkę ZIP.
+2. Otwórz rozpakowany folder.
+3. Znajdź plik:
+
+index.html
+
+4. Kliknij plik index.html dwa razy.
+
+Gra powinna otworzyć się w domyślnej przeglądarce internetowej.
+
+Jeżeli gra nie otworzy się automatycznie albo chcesz wybrać konkretną przeglądarkę:
+
+1. Kliknij prawym przyciskiem myszy plik index.html.
+2. Wybierz opcję:
+
+Otwórz za pomocą
+
+3. Wybierz przeglądarkę, np.:
+
+Google Chrome
+Microsoft Edge
+Mozilla Firefox
+
+4. Gra otworzy się w wybranej przeglądarce.
