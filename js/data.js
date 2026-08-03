@@ -2,7 +2,7 @@
 window.ASZ = window.ASZ || {};
 
 ASZ.VERSION = '2.0.0';
-ASZ.SHOP_URL = 'https://payhip.com/AkademiaSuperZdrowia'; // TODO: podmienić na własną domenę po starcie
+ASZ.SHOP_URL = 'https://www.akademiasuperzdrowia.pl/shop?utm_source=gra&utm_medium=referral&utm_campaign=nagroda';
 
 ASZ.CHARS = {
   energus:     { name: 'Energuś',     img: 'assets/img/portrait-energus.webp' },
