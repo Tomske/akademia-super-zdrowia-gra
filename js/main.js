@@ -4,6 +4,21 @@ window.ASZ = window.ASZ || {};
 (function () {
   const $ = ASZ.ui.$;
 
+  /* stary adres GitHub Pages -> domena docelowa (zachowaj ścieżkę w obrębie repo) */
+  if (location.hostname === 'tomske.github.io') {
+    const rest = location.pathname.replace(/^\/akademia-super-zdrowia-gra\/?/, '');
+    location.replace('https://gra.akademiasuperzdrowia.pl/' + rest + location.search + location.hash);
+    return;
+  }
+
+  /* Vercel Web Analytics (bezcookiesowe) — tylko na domenach serwowanych przez Vercel */
+  if (/(^gra\.akademiasuperzdrowia\.pl$)|(\.vercel\.app$)/.test(location.hostname)) {
+    const s = document.createElement('script');
+    s.defer = true;
+    s.src = '/_vercel/insights/script.js';
+    document.head.appendChild(s);
+  }
+
   /* ---------- preload ---------- */
   function preload(onProgress) {
     const list = [...new Set(ASZ.PRELOAD)];

@@ -1,4 +1,12 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "akademia-super-zdrowia-gra.vercel.app" }],
+      "destination": "https://gra.akademiasuperzdrowia.pl/:path*",
+      "permanent": true
+    }
+  ]
 }
