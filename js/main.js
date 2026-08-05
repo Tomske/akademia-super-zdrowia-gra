@@ -35,6 +35,19 @@ window.ASZ = window.ASZ || {};
   }
 
   /* ---------- PWA: instalacja ---------- */
+  const IOS_INSTALL_HTML = `
+    <h3>Zapisz grę jako aplikację</h3>
+    <p>Na iPhonie / iPadzie Safari nie pozwala zainstalować gry jednym kliknięciem
+    (to ograniczenie Apple, nie gry) — zrób to ręcznie, zajmie 10 sekund:</p>
+    <ol>
+      <li>Kliknij przycisk Udostępnij <span style="border:1px solid #999;border-radius:4px;padding:0 5px">↑</span> na dole ekranu Safari.</li>
+      <li>Wybierz „Dodaj do ekranu początkowego”.</li>
+    </ol>
+    <p>Gra pojawi się jak zwykła aplikacja, będzie działać offline i zapamięta postęp.</p>`;
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -42,16 +55,29 @@ window.ASZ = window.ASZ || {};
     $('#btn-install').classList.remove('hidden');
   });
   $('#btn-install').addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    $('#btn-install').classList.add('hidden');
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      $('#btn-install').classList.add('hidden');
+      return;
+    }
+    ASZ.audio.tap();
+    ASZ.ui.showModal(IOS_INSTALL_HTML);
   });
   window.addEventListener('appinstalled', () => {
     $('#btn-install').classList.add('hidden');
     ASZ.ui.toast('Gra zainstalowana! Znajdziesz ją na ekranie głównym.');
   });
+
+  /* Safari na iOS nigdy nie odpala beforeinstallprompt — bez tego przycisk
+     "Zainstaluj" zostawałby ukryty na zawsze i telefon nie dostawałby żadnej
+     zachęty do zapisania gry (w przeciwieństwie do komputera / Androida). */
+  if (isIOS && !isStandalone) {
+    const btn = $('#btn-install');
+    btn.textContent = 'Zapisz jako aplikację';
+    btn.classList.remove('hidden');
+  }
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {
