@@ -1,5 +1,5 @@
 /* Service Worker: precache rdzenia gry, działanie offline; komiks PDF cache'owany przy pierwszym użyciu */
-const VERSION = 'asz-v2.0.5';
+const VERSION = 'asz-v2.0.6';
 const CORE = [
   './',
   'index.html',
