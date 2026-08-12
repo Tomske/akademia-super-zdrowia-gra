@@ -4,8 +4,15 @@ Od 08.2026 to repo serwuje CALA subdomene gra.akademiasuperzdrowia.pl:
 
 - `/` — hub serii gier (statyczna strona, kafelki do poszczegolnych gier)
 - `/misja-energia/` — gra "Misja: Prawdziwa Energia" (przeniesiona z roota)
-- Zdrowe Rutyny maja osobne repo (`Tomske/asz-rutyny`) i osobna subdomene
-  (rutyny.akademiasuperzdrowia.pl); hub tylko do nich linkuje.
+- `/rutyny/` — apka "Zdrowe Rutyny" (PWA React/Vite): ZBUDOWANY output, commitowany do repo
+- `rutyny-src/` — zrodla apki Zdrowe Rutyny (Vite + React + vitest); NIE jest serwowane
+
+Zdrowe Rutyny: po zmianie w `rutyny-src/` przebuduj i commituj output:
+`cd rutyny-src && pnpm install && pnpm test && pnpm build` (build pisze do `../rutyny`).
+Projekt Vercel jest czysto statyczny i NICZEGO nie buduje. Plansze rutyn: WebP 1400px
+generowane skryptem `rutyny-src/scripts/convert-illustrations.mjs` z oryginalow PNG
+w folderze klienta Hadron OS (`08-aplikacja rutyny/asz aplikacja/public/illustrations`).
+Repo `Tomske/asz-rutyny` bylo krotko osobnym domem apki i jest do skasowania.
 
 Gra: przegladarkowa PWA, mapa misji, 4 mini-gry + walka z Glutonem X, gwiazdki, zapis
 postepu, nagroda = komiks czesc 1 (PDF). Bez logowania, bez reklam, bez zbierania danych.
@@ -23,8 +30,12 @@ postepu, nagroda = komiks czesc 1 (PDF). Bez logowania, bez reklam, bez zbierani
   (scope `/`, cache-first), czysci cache, wyrejestrowuje sie i przeladowuje karty.
   Hub nie rejestruje zadnego SW. Nie usuwac tego pliku, dopoki realnie istnieja
   urzadzenia ze stara instalacja (bez niego utkna na starym cache na zawsze).
-- Hub w naglowku sprawdza `localStorage['asz_save_v1']` i urzadzenia, ktore juz graly,
-  przekierowuje od razu do `/misja-energia/` (ich zainstalowana ikonka PWA celuje w `/`).
+- Hub w naglowku sprawdza `localStorage['asz_save_v1']` i przekierowuje do gry TYLKO
+  uruchomienia standalone (zainstalowana ikonka PWA celujaca w `/`); zwykle wejscia
+  przegladarka widza hub, takze na urzadzeniach, ktore graly.
+- `trailingSlash: true` w vercel.json jest CELOWE: SW apki Rutyny ma scope `/rutyny/`,
+  a przy trailingSlash false kanoniczny URL bylby `/rutyny` (poza scope) i offline by nie
+  dzialalo. Gra i komiks maja `<base href="/misja-energia/">`, wiec slash im nie szkodzi.
 - `vercel.json` przekierowuje stare publiczne URL-e: `/komiks`, `/manifest.webmanifest`,
   `/assets/*`, `/css/*`, `/js/*` -> `/misja-energia/...`. NIE dodawac redirectu dla
   `/sw.js` (przegladarki odrzucaja skrypty SW serwowane przez redirect).

@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <script>
-    /* Urządzenia, które już grały w Misję (zapis w localStorage), trafiają prosto do gry.
-       Ich zainstalowana ikonka PWA wskazuje na "/", więc bez tego widziałyby hub zamiast gry. */
-    try { if (localStorage.getItem('asz_save_v1')) location.replace('/misja-energia/'); } catch (e) {}
+    /* Stare instalacje PWA gry celują w "/" (dawny adres gry). Przekierowujemy do gry
+       TYLKO uruchomienia z zainstalowanej ikonki (standalone) na urządzeniach z zapisem gry.
+       Zwykłe wejścia przeglądarką widzą hub normalnie, także po zagraniu w Misję. */
+    try {
+      var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+      if (standalone && localStorage.getItem('asz_save_v1')) location.replace('/misja-energia/');
+    } catch (e) {}
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Gry Akademii Super Zdrowia: zdrowe nawyki dla dzieci przez zabawę. Bez logowania i bez zbierania danych." />
@@ -68,7 +72,7 @@
         <p>Pomóż drużynie pokonać Glutona X w pięciu misjach i odblokuj komiks.</p>
         <span class="cta">Graj</span>
       </a>
-      <a class="tile" href="https://rutyny.akademiasuperzdrowia.pl">
+      <a class="tile" href="/rutyny/">
         <svg viewBox="0 0 1000 1000" aria-hidden="true">
           <path d="M 200,50 L 800,50 C 910,50 950,120 950,210 L 950,440 C 950,720 780,880 500,990 C 220,880 50,720 50,440 L 50,210 C 50,120 90,50 200,50 Z" fill="#FFC300"/>
           <path d="M 236,106.4 L 764,106.4 C 860.8,106.4 896,168 896,247.2 L 896,449.6 C 896,696 746.4,836.8 500,933.6 C 253.6,836.8 104,696 104,449.6 L 104,247.2 C 104,168 139.2,106.4 236,106.4 Z" fill="#14213D"/>

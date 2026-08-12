@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
+  "trailingSlash": true,
   "redirects": [
     {
       "source": "/:path*",
@@ -8,7 +8,7 @@
       "destination": "https://gra.akademiasuperzdrowia.pl/:path*",
       "permanent": true
     },
-    { "source": "/komiks", "destination": "/misja-energia/komiks", "permanent": true },
+    { "source": "/komiks", "destination": "/misja-energia/komiks/", "permanent": true },
     { "source": "/manifest.webmanifest", "destination": "/misja-energia/manifest.webmanifest", "permanent": true },
     { "source": "/assets/:path*", "destination": "/misja-energia/assets/:path*", "permanent": true },
     { "source": "/css/:path*", "destination": "/misja-energia/css/:path*", "permanent": true },
