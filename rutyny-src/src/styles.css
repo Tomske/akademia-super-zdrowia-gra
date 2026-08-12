@@ -130,3 +130,12 @@ footer{text-align:center;padding:1.5rem;color:#5B6B8C}
 .color-row{display:flex;gap:.5rem;flex-wrap:wrap}
 .color-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);min-width:36px;min-height:36px}
 .color-dot.selected{outline:4px solid var(--navy);outline-offset:2px}
+
+/* wyskakujaca nagroda punktowa */
+.reward-overlay{position:fixed;inset:0;pointer-events:none;display:grid;justify-items:center;align-items:start;z-index:30}
+.reward-float{margin-top:24vh;font-family:'Baloo 2',Inter,ui-rounded,"Segoe UI",Arial,sans-serif;font-weight:800;color:var(--gold);text-shadow:0 2px 10px #0C1428CC;font-size:2.2rem;animation:reward-rise .9s ease-out forwards}
+.reward-float.complete{font-size:3rem;animation-duration:1.6s}
+.reward-float.day{font-size:3.6rem;animation-duration:1.6s}
+@keyframes reward-rise{0%{opacity:0;transform:translateY(14px) scale(.8)}20%{opacity:1;transform:translateY(0) scale(1.08)}70%{opacity:1}100%{opacity:0;transform:translateY(-34px)}}
+@keyframes reward-fade{0%{opacity:0}20%{opacity:1}70%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.reward-float,.reward-float.complete,.reward-float.day{animation-name:reward-fade;transform:none}}
