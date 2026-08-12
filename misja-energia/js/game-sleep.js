@@ -105,9 +105,11 @@ ASZ.games.sleep = {
         moons--;
         stats.moons(moons);
         if (moons <= 0) {
-          statusEl.textContent = 'Ojej, oczy same się kleją…';
-          later(() => api.onEnd({ success: false, stars: 0, score: 0 }), 900);
           alive = false;
+          statusEl.textContent = 'Ojej, oczy same się kleją…';
+          // goły setTimeout jak w end(): later() jest bramkowany przez alive, więc po
+          // alive=false nigdy by nie odpalił i gra wisiała bez ekranu wyniku
+          setTimeout(() => api.onEnd({ success: false, stars: 0, score: 0 }), 900);
           return;
         }
         statusEl.textContent = 'Prawie! Senek pokaże jeszcze raz…';

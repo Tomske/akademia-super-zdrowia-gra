@@ -193,7 +193,8 @@ body {
   display: flex; gap: 10px; align-items: center;
   padding: max(12px, env(safe-area-inset-top)) 14px 8px;
 }
-.map-top-right { margin-left: auto; }
+.map-top-right { margin-left: auto; display: flex; gap: 8px; }
+.map-top-right a.round-btn { text-decoration: none; }
 .hud-chip {
   background: rgba(10, 16, 44, .68);
   border: 2px solid rgba(255,255,255,.28);

@@ -7,8 +7,10 @@
        TYLKO uruchomienia z zainstalowanej ikonki (standalone) na urządzeniach z zapisem gry.
        Zwykłe wejścia przeglądarką widzą hub normalnie, także po zagraniu w Misję. */
     try {
+      /* ?menu=1 (linki "Inne gry" w grach) omija przekierowanie, inaczej gracz
+         w zainstalowanej apce nigdy nie doszedlby do huba */
       var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
-      if (standalone && localStorage.getItem('asz_save_v1')) location.replace('/misja-energia/');
+      if (standalone && !location.search && localStorage.getItem('asz_save_v1')) location.replace('/misja-energia/');
     } catch (e) {}
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -83,7 +85,7 @@
         <span class="cta">Zacznij</span>
       </a>
     </div>
-    <footer>Część projektu <a href="https://www.akademiasuperzdrowia.pl">akademiasuperzdrowia.pl</a></footer>
+    <footer>Część projektu <a href="https://www.akademiasuperzdrowia.pl" target="_blank" rel="noopener">akademiasuperzdrowia.pl</a></footer>
   </main>
 </body>
 </html>
