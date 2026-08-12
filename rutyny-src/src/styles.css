@@ -111,3 +111,22 @@ footer{text-align:center;padding:1.5rem;color:#5B6B8C}
 .celebration-particle{position:absolute;top:100%;font-size:1.8rem;animation-name:celebration-rise;animation-timing-function:ease-out;animation-fill-mode:forwards}
 @keyframes celebration-rise{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translateY(-100vh) rotate(var(--rotation));opacity:0}}
 @media(max-width:480px){.install-banner{flex-wrap:wrap}}
+
+/* profile dzieci */
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}
+.profile-tile{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.25rem 1rem;display:grid;justify-items:center;gap:.6rem;font-size:1.05rem;color:var(--navy-3)}
+.profile-tile.active{outline:3px solid var(--gold);outline-offset:2px}
+.profile-tile.add .profile-avatar{background:#FFEFC2;color:var(--navy)}
+.profile-avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',Inter,ui-rounded,"Segoe UI",Arial,sans-serif;font-size:1.8rem;font-weight:800}
+.profile-avatar.small{width:34px;height:34px;font-size:1.05rem}
+.profile-switch{border:0;background:transparent;padding:.3rem;display:grid;place-items:center}
+.profile-form{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.25rem;margin-top:1.25rem;display:grid;gap:.75rem;max-width:420px}
+.profile-form input{border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem}
+.profile-form fieldset{border:0;margin:0;padding:0}
+.profile-form legend{font-weight:700;margin-bottom:.4rem}
+.profile-form-actions{display:flex;gap:.6rem}
+.profile-form-actions button[type=submit]{background:var(--gold);border:0;border-radius:12px;padding:.7rem 1.1rem;font-weight:800;color:var(--navy-3)}
+.profile-form-actions .ghost{background:transparent;border:1px solid var(--line);border-radius:12px;padding:.7rem 1.1rem;font-weight:700;color:var(--navy)}
+.color-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.color-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);min-width:36px;min-height:36px}
+.color-dot.selected{outline:4px solid var(--navy);outline-offset:2px}
