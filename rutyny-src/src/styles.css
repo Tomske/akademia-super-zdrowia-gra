@@ -139,3 +139,14 @@ footer{text-align:center;padding:1.5rem;color:#5B6B8C}
 @keyframes reward-rise{0%{opacity:0;transform:translateY(14px) scale(.8)}20%{opacity:1;transform:translateY(0) scale(1.08)}70%{opacity:1}100%{opacity:0;transform:translateY(-34px)}}
 @keyframes reward-fade{0%{opacity:0}20%{opacity:1}70%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion: reduce){.reward-float,.reward-float.complete,.reward-float.day{animation-name:reward-fade;transform:none}}
+
+/* licznik punktow na hero + wiersze profili w strefie rodzica */
+.score-card{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem 1rem;background:#0C142866;border-radius:16px;padding:.8rem 1.1rem;margin-top:1rem}
+.score-label{font-weight:800;font-size:1.15rem}
+.score-points{font-family:'Baloo 2',Inter,ui-rounded,"Segoe UI",Arial,sans-serif;font-size:clamp(1.9rem,5vw,2.8rem);color:var(--gold);font-weight:800;line-height:1}
+.score-streak{font-weight:700}
+.profile-row{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;padding:.7rem 0;border-top:1px solid var(--line)}
+.profile-row:first-of-type{border-top:0}
+.profile-row input{border:1px solid var(--line);border-radius:12px;padding:.55rem .8rem;min-width:140px;flex:1}
+.profile-row .danger{margin-left:auto}
+.hint{color:#5B6B8C;margin:.6rem 0 0}
