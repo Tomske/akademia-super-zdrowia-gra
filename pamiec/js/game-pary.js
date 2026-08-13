@@ -7,9 +7,9 @@ ASZP.games.pary = {
     const cfg = api.level.cfg;
     const pairs = cfg.pairs;
 
-    /* pula obrazków: itemy, a na najtrudniejszym poziomie także portrety bohaterów */
-    const pool = cfg.mix ? [...ASZP.ITEM_KEYS, ...ASZP.CHAR_KEYS] : [...ASZP.ITEM_KEYS];
-    const chosen = ASZP.shuffle(pool).slice(0, pairs);
+    /* pula kart z tematu krainy (dla Krainy Emocji: buźki emocji) */
+    const zone = ASZP.zoneById(api.level.zone);
+    const chosen = ASZP.shuffle([...ASZP.SETS[zone.set]]).slice(0, pairs);
     const deck = ASZP.shuffle([...chosen, ...chosen]);
 
     let openCard = null;      /* pierwsza odkryta karta w ruchu */
@@ -42,7 +42,7 @@ ASZP.games.pary = {
       b.innerHTML = `
         <span class="card-inner">
           <span class="card-back">${crest}</span>
-          <span class="card-face"><img src="${ASZP.imgOf(key)}" alt="" draggable="false" /></span>
+          <span class="card-face">${ASZP.iconHtml(key)}</span>
         </span>`;
       b.addEventListener('click', () => flip(b));
       grid.appendChild(b);

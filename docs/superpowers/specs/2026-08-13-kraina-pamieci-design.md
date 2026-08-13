@@ -27,22 +27,35 @@ Rozważone warianty:
 
 ## Świat i gry
 
+REWIZJA po feedbacku Tomka (2026-08-13, ta sama sesja): krainy nie są nazwane od mechanik,
+tylko od tematów zdrowego stylu życia, każda z bohaterem-gospodarzem z ebooka. Mechanika gry
+pozostaje przypisana 1:1 do krainy, bo naturalnie pasuje do tematu.
+
 Jedna przewijana mapa świata z trzema krainami po 5 poziomów oraz finałowym Turniejem:
 
-1. **Wieża Wzorów** (typ `wzory`, mechanika Simon jak w Rytuale Senka): kafelki podświetlają
-   się w kolejności, dziecko powtarza. Poziomy zwiększają liczbę kafelków (4 do 6), długość
-   sekwencji (do 8) i tempo.
-2. **Ogród Par** (typ `pary`, klasyczne memory): odkrywanie par kart z ilustracjami itemów
-   i bohaterów ASZ. Poziomy od 3 do 8 par, gwiazdki zależą od liczby ruchów.
-3. **Jaskinia Zniknięć** (typ `znikanie`): plansza przedmiotów do zapamiętania, po chwili
-   jeden znika, dziecko wskazuje który. Poziomy zwiększają liczbę przedmiotów (3 do 8)
-   i skracają czas podglądu. Każdy poziom to 3 rundy.
-4. **Turniej Mistrza Pamięci** (typ `turniej`): tryb bez końca na mechanice wzorów, sekwencja
-   rośnie aż do porażki, zapisywany jest rekord długości. Odznaki: Brązowy / Srebrny / Złoty
-   Mistrz przy rekordzie 6 / 9 / 12. Odblokowany od 15 gwiazdek łącznie.
+1. **Kraina Emocji** (gospodarz Uśmiechanka, typ `pary`, klasyczne memory): odkrywanie par
+   takich samych emocji. Kafelki to rysowane inline SVG buźki 10 emocji (radość, smutek,
+   złość, strach, spokój, zdziwienie, zmęczenie, miłość, nieśmiałość, duma) w stylu herbu
+   ASZ (złota twarz, granatowe rysy). Poziomy: 3 / 4 / 6 / 8 / 10 par, gwiazdki za liczbę
+   ruchów. Wartość edukacyjna: rozpoznawanie i nazywanie emocji.
+2. **Kraina Witamin** (gospodarz Witaminka, typ `znikanie`): stół z jedzeniem do
+   zapamiętania, Gluton coś podkrada, dziecko wskazuje co. Plansza z istniejących ilustracji
+   WebP itemów z Misji. Poziomy: 3 do 6 przedmiotów, podgląd od 6 do 3 s, od poziomu 3
+   dodatkowo tasowanie pozycji, poziom 5 ma 4 rundy.
+3. **Kraina Snu** (gospodarz Senek, typ `wzory`, mechanika Simon jak w Rytuale Senka
+   z Misji): kroki wieczornego rytuału podświetlają się w kolejności, dziecko powtarza.
+   Kafelki to 8 kreskowych ikon SVG rytuału (odłóż telefon, umyj zęby, kąpiel, piżama,
+   poczytaj, przygaś światło, przytulanka, śpij). Poziomy zwiększają liczbę kafelków
+   (4 do 6), długość sekwencji (do 8) i tempo.
+4. **Turniej Mistrza Pamięci** (prowadzi Mózguś, typ `turniej`): tryb bez końca na mechanice
+   wzorów, kafelki losowane ze WSZYSTKICH trzech tematów, sekwencja rośnie aż do porażki,
+   zapisywany jest rekord długości. Odznaki: Brązowy / Srebrny / Złoty Mistrz przy rekordzie
+   6 / 9 / 12. Odblokowany od 15 gwiazdek łącznie.
 
 Razem 15 poziomów + turniej. Wszystkie trzy krainy otwarte od startu (dziecko wybiera, co
 lubi), poziomy wewnątrz krainy odblokowywane po kolei (min. 1 gwiazdka na poprzednim).
+Na mapie każda kraina ma portret gospodarza i własny kolor tła (róż emocji, zieleń witamin,
+fiolet snu), turniej ma złote trofeum.
 
 ## Punkty, gwiazdki, zapis wyników
 
@@ -79,14 +92,18 @@ lubi), poziomy wewnątrz krainy odblokowywane po kolei (min. 1 gwiazdka na poprz
   wyłącza animacje ozdobne, obrazki dekoracyjne z pustym `alt`.
 - Hub `index.html`: trzeci kafelek z portretem Mózgusia, tekst bez zbierania danych bez zmian.
 
-## Poziomy (konfiguracja startowa, do strojenia po testach z dziećmi)
+## Poziomy (konfiguracja startowa po rewizji, do strojenia po testach z dziećmi)
 
-- Wzory: W1 4 kafelki, rundy 2-4; W2 4 kafelki, rundy 3-5; W3 5 kafelków, rundy 3-6;
-  W4 5 kafelków, rundy 4-7; W5 6 kafelków, rundy 4-8. 3 iskry, błąd powtarza sekwencję.
-- Pary: 3, 4, 6, 8, 8 par (P5 miesza itemy i portrety). 3 gwiazdki przy ruchach
+- Kraina Snu (wzory): W1 4 kafelki, rundy 2-4; W2 4 kafelki, rundy 3-5; W3 5 kafelków,
+  rundy 3-6; W4 5 kafelków, rundy 4-7; W5 6 kafelków, rundy 4-8. 3 iskry, błąd powtarza
+  sekwencję.
+- Kraina Emocji (pary): 3, 4, 6, 8, 10 par z puli 10 buziek. 3 gwiazdki przy ruchach
   do 160 procent liczby par w zaokrągleniu w górę plus 1, 2 gwiazdki do 250 procent.
-- Znikanie: przedmioty 3/4/5/6/8, podgląd 6/6/5/5/4 s, po 3 rundy, 3 iskry.
-- Turniej: 6 kafelków, start od sekwencji 3, rekord = najdłuższa powtórzona sekwencja.
+- Kraina Witamin (znikanie): przedmioty 3/4/5/6/6, podgląd 6/5/5/4/3 s, rundy 3/3/3/3/4,
+  tasowanie od poziomu 3, opcje odpowiedzi 4, 3 iskry. Pula 9 itemów ogranicza planszę
+  do 6 przy 4 opcjach (dystraktory muszą być spoza planszy).
+- Turniej: 6 kafelków z połączonej puli 27 treści, start od sekwencji 3, rekord =
+  najdłuższa powtórzona sekwencja.
 
 ## Poza zakresem v1
 

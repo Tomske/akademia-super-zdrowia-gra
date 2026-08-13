@@ -8,6 +8,7 @@ ASZP.games.turniej = {
       tiles: ASZP.TURNIEJ.tiles,
       endless: true,
       start: ASZP.TURNIEJ.start,
+      pool: ASZP.ALL_KEYS,
       gap: 620
     });
   }

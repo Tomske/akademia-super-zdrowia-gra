@@ -5,7 +5,7 @@ ASZP.games = ASZP.games || {};
 ASZP.games.znikanie = {
   start(api) {
     const cfg = api.level.cfg;
-    const POOL = [...ASZP.ITEM_KEYS, ...ASZP.CHAR_KEYS];
+    const POOL = [...ASZP.SETS[ASZP.zoneById(api.level.zone).set]];
 
     let round = 0;
     let lives = 3;
@@ -35,7 +35,7 @@ ASZP.games.znikanie = {
 
     function itemCell(key, hidden) {
       return `<div class="van-item${hidden ? ' gone' : ''}" data-key="${key}">
-        <img src="${ASZP.imgOf(key)}" alt="" draggable="false" /><span>${ASZP.nameOf(key)}</span></div>`;
+        ${ASZP.iconHtml(key)}<span>${ASZP.nameOf(key)}</span></div>`;
     }
 
     function startRound() {
@@ -85,7 +85,8 @@ ASZP.games.znikanie = {
       options.forEach((key) => {
         const b = document.createElement('button');
         b.className = 'gtile small';
-        b.innerHTML = `<img src="${ASZP.imgOf(key)}" alt="" draggable="false" /><span>${ASZP.nameOf(key)}</span>`;
+        b.dataset.key = key;
+        b.innerHTML = `${ASZP.iconHtml(key)}<span>${ASZP.nameOf(key)}</span>`;
         b.addEventListener('click', () => answer(b, key, missing));
         trayEl.appendChild(b);
       });

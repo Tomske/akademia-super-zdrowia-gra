@@ -161,7 +161,7 @@ ASZP.ui = (function () {
       html += `
       <section class="zone zone-${zone.id}">
         <div class="zone-head">
-          <span class="zone-emblem">${ASZP.EMBLEMS[zone.id]}</span>
+          <span class="zone-emblem zone-host"><img src="${ASZP.IMG + ASZP.CHARS[zone.host].img}" alt="${ASZP.CHARS[zone.host].name}" /></span>
           <div>
             <h2>${zone.name}</h2>
             <p>${zone.desc}</p>
@@ -182,7 +182,7 @@ ASZP.ui = (function () {
     html += `
     <section class="zone zone-turniej${open ? '' : ' locked'}">
       <div class="zone-head">
-        <span class="zone-emblem">${ASZP.EMBLEMS.turniej}</span>
+        <span class="zone-emblem">${ASZP.TROPHY}</span>
         <div>
           <h2>${ASZP.TURNIEJ.name}</h2>
           <p>${open ? ASZP.TURNIEJ.desc : `Zdobądź ${ASZP.TURNIEJ.unlockStars} gwiazdek w krainach, aby otworzyć turniej. Masz ${ASZP.save.starsTotal(p)}.`}</p>

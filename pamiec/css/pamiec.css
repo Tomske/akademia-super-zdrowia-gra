@@ -125,9 +125,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   border: 1px solid var(--line); border-radius: 24px;
   padding: 20px 20px 16px; position: relative; overflow: hidden;
 }
-.zone-wieza    { background: linear-gradient(160deg, #24397c, #1a2758); }
-.zone-ogrod    { background: linear-gradient(160deg, #1d4a3a, #14304e); }
-.zone-jaskinia { background: linear-gradient(160deg, #322558, #131f4a); }
+.zone-emocje   { background: linear-gradient(160deg, #6e2a4e, #241a4e); }
+.zone-jedzenie { background: linear-gradient(160deg, #1d4a3a, #14304e); }
+.zone-sen      { background: linear-gradient(160deg, #322558, #131f4a); }
 .zone-turniej  { background: linear-gradient(160deg, #57430f, #1a2758); border-color: rgba(255, 195, 0, .45); }
 .zone-turniej.locked { opacity: .8; border-color: var(--line); background: linear-gradient(160deg, #2a2f45, #1a2340); }
 
@@ -139,6 +139,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   padding: 8px;
 }
 .zone-emblem svg { width: 100%; height: 100%; }
+.zone-emblem.zone-host { padding: 0; overflow: hidden; }
+.zone-emblem.zone-host img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
 .zone.locked .zone-emblem { filter: grayscale(1); }
 .zone-score {
   margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 5px;
@@ -213,7 +215,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   border-radius: 20px; padding: 14px 10px 12px;
   transition: transform .12s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
-.gtile img { width: clamp(56px, 9vw, 92px); height: clamp(56px, 9vw, 92px); object-fit: contain; pointer-events: none; }
+.gtile .icon { width: clamp(56px, 9vw, 92px); height: clamp(56px, 9vw, 92px); object-fit: contain; pointer-events: none; }
+.icon-svg { display: inline-flex; align-items: center; justify-content: center; }
+.icon-svg svg { width: 100%; height: 100%; }
 .gtile span { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 15px; }
 .gtile:disabled { cursor: default; }
 .gtile.lit {
@@ -223,7 +227,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .gtile.good { border-color: var(--good); box-shadow: 0 0 18px rgba(129, 199, 132, .5); }
 .gtile.bad { border-color: var(--bad); box-shadow: 0 0 18px rgba(255, 138, 128, .5); animation: shake .32s ease; }
 .gtile.small { padding: 10px 8px 8px; border-radius: 16px; }
-.gtile.small img { width: clamp(44px, 7vw, 64px); height: clamp(44px, 7vw, 64px); }
+.gtile.small .icon { width: clamp(44px, 7vw, 64px); height: clamp(44px, 7vw, 64px); }
 .gtile.small span { font-size: 13px; }
 
 @keyframes shake {
@@ -238,6 +242,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pairs-8  { grid-template-columns: repeat(4, minmax(78px, 140px)); }
 .pairs-12 { grid-template-columns: repeat(4, minmax(78px, 140px)); }
 .pairs-16 { grid-template-columns: repeat(4, minmax(72px, 130px)); }
+.pairs-20 { grid-template-columns: repeat(5, minmax(66px, 118px)); }
 .card { background: none; border: 0; padding: 0; perspective: 700px; aspect-ratio: 3 / 4; }
 .card-inner {
   position: relative; display: block; width: 100%; height: 100%;
@@ -253,7 +258,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .card-back svg { width: 46%; height: 46%; opacity: .9; }
 .card:hover .card-back { background: rgba(255, 255, 255, .13); }
 .card-face { background: rgba(255, 255, 255, .1); border: 2.5px solid rgba(255, 255, 255, .3); transform: rotateY(180deg); padding: 8%; }
-.card-face img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.card-face .icon { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .card.matched .card-face { border-color: var(--gold); box-shadow: 0 0 16px rgba(255, 195, 0, .4); }
 .card.matched { cursor: default; }
 
@@ -269,7 +274,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: rgba(255, 255, 255, .07); border: 2px solid rgba(255, 255, 255, .18);
   border-radius: 18px; padding: 12px 8px 10px;
 }
-.van-item img { width: clamp(48px, 8vw, 80px); height: clamp(48px, 8vw, 80px); object-fit: contain; }
+.van-item .icon { width: clamp(48px, 8vw, 80px); height: clamp(48px, 8vw, 80px); object-fit: contain; }
 .van-item span { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 13.5px; text-align: center; }
 .van-item.gone { border-style: dashed; border-color: rgba(255, 195, 0, .6); background: rgba(255, 195, 0, .07); }
 .qmark { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(34px, 6vw, 52px); color: var(--gold); line-height: 1.2; }
@@ -330,7 +335,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .node-nr { width: 46px; height: 46px; font-size: 18px; }
   .tiles-4 { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
   .tiles-5, .tiles-6 { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
-  .pairs-8, .pairs-12, .pairs-16 { grid-template-columns: repeat(4, minmax(64px, 1fr)); }
+  .pairs-8, .pairs-12, .pairs-16, .pairs-20 { grid-template-columns: repeat(4, minmax(64px, 1fr)); }
   .result-panel .guide-img { margin-top: -56px; width: 76px; height: 76px; }
 }
 

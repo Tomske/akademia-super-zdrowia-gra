@@ -8,8 +8,8 @@ ASZP.sequenceEngine = function (api, opts) {
   const endless = !!opts.endless;
   const rounds = opts.rounds || [];
 
-  /* stały losowy zestaw obrazków na całą rozgrywkę */
-  const pool = ASZP.shuffle([...ASZP.SEQ_POOL]).slice(0, tilesCount);
+  /* stały losowy zestaw kafelków na całą rozgrywkę, z puli tematu krainy */
+  const pool = ASZP.shuffle([...opts.pool]).slice(0, tilesCount);
 
   let round = 0;             /* w trybie endless: numer rundy od 0 */
   let lives = 3;
@@ -32,7 +32,7 @@ ASZP.sequenceEngine = function (api, opts) {
   const tiles = pool.map((key, i) => {
     const b = document.createElement('button');
     b.className = 'gtile';
-    b.innerHTML = `<img src="${ASZP.imgOf(key)}" alt="" draggable="false" /><span>${ASZP.nameOf(key)}</span>`;
+    b.innerHTML = `${ASZP.iconHtml(key)}<span>${ASZP.nameOf(key)}</span>`;
     b.addEventListener('click', () => press(i));
     tilesWrap.appendChild(b);
     return b;
@@ -137,6 +137,12 @@ ASZP.sequenceEngine = function (api, opts) {
 ASZP.games.wzory = {
   start(api) {
     const cfg = api.level.cfg;
-    return ASZP.sequenceEngine(api, { tiles: cfg.tiles, rounds: cfg.rounds, gap: 640 - (api.level.nr - 1) * 30 });
+    const zone = ASZP.zoneById(api.level.zone);
+    return ASZP.sequenceEngine(api, {
+      tiles: cfg.tiles,
+      rounds: cfg.rounds,
+      pool: ASZP.SETS[zone.set],
+      gap: 640 - (api.level.nr - 1) * 30
+    });
   }
 };
