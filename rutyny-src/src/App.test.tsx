@@ -24,8 +24,6 @@ describe('App (integracja profili i punktów)', () => {
     fireEvent.change(await screen.findByLabelText('Imię dziecka'), { target: { value: 'Franek' } })
     fireEvent.click(screen.getByRole('button', { name: 'Zapisz profil' }))
     await screen.findByText('0 pkt')
-    const [firstCard] = await screen.findAllByRole('button', { expanded: false })
-    fireEvent.click(firstCard)
     const [checkbox] = await screen.findAllByRole('checkbox')
     fireEvent.click(checkbox)
     expect(await screen.findByText('+1')).toBeInTheDocument()
