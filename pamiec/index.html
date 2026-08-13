@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Kraina Pamięci: gry treningu pamięci dla dzieci z Mózgusiem. Powtarzaj wzory, łącz pary, tropij zniknięcia. Bez logowania i bez zbierania danych." />
+  <meta name="theme-color" content="#131f4a" />
+  <link rel="canonical" href="https://gra.akademiasuperzdrowia.pl/pamiec/" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <title>Kraina Pamięci — Akademia Super Zdrowia</title>
+  <link rel="stylesheet" href="css/pamiec.css" />
+</head>
+<body>
+  <noscript><p style="padding:20px;text-align:center">Ta gra potrzebuje włączonego JavaScript.</p></noscript>
+
+  <!-- ekran: kto trenuje -->
+  <section id="screen-players" class="screen hidden">
+    <div class="players-wrap">
+      <img class="guide-img" src="/misja-energia/assets/img/portrait-mozgus.webp" alt="" />
+      <p class="kicker">Kraina Pamięci</p>
+      <h1>Kto dziś trenuje pamięć?</h1>
+      <p class="lead">Mózguś zapisze wyniki każdego gracza osobno, tylko na tym urządzeniu.</p>
+      <div id="players-list" class="players-list"></div>
+      <form id="player-form" class="player-form">
+        <input id="player-name" type="text" maxlength="16" placeholder="Imię gracza" autocomplete="off" />
+        <div id="color-picks" class="color-picks" role="radiogroup" aria-label="Kolor gracza"></div>
+        <button type="submit" class="btn btn-gold">Dodaj gracza</button>
+      </form>
+      <p class="fineprint">Bez logowania, bez reklam. Wyniki zostają na Twoim urządzeniu.</p>
+    </div>
+  </section>
+
+  <!-- ekran: mapa świata -->
+  <section id="screen-map" class="screen hidden">
+    <header class="topbar">
+      <button id="chip-player" class="chip" title="Zmień gracza"></button>
+      <div class="topstats">
+        <span id="stat-stars" class="stat" title="Gwiazdki"></span>
+        <span id="stat-points" class="stat" title="Punkty Pamięci"></span>
+      </div>
+      <button id="btn-sound" class="iconbtn" aria-label="Dźwięk"></button>
+    </header>
+    <div class="world-head">
+      <img class="guide-img small" src="/misja-energia/assets/img/portrait-mozgus.webp" alt="" />
+      <div>
+        <p class="kicker">Akademia Super Zdrowia</p>
+        <h1>Kraina Pamięci</h1>
+        <p class="lead">Trzy krainy, piętnaście wyzwań i wielki turniej. Trenuj pamięć z Mózgusiem!</p>
+      </div>
+    </div>
+    <main id="world" class="world"></main>
+    <footer class="foot">
+      <a href="/?menu=1">Inne gry Akademii</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://www.akademiasuperzdrowia.pl" target="_blank" rel="noopener">akademiasuperzdrowia.pl</a>
+    </footer>
+  </section>
+
+  <!-- ekran: gra -->
+  <section id="screen-game" class="screen hidden">
+    <div class="game-top">
+      <button id="btn-back" class="btn btn-ghost">&#8592; Mapa</button>
+      <div id="game-title" class="game-title"></div>
+      <div class="game-hud">
+        <span id="game-lives" class="lives"></span>
+        <span id="game-progress" class="progress"></span>
+      </div>
+    </div>
+    <div id="arena" class="arena"></div>
+  </section>
+
+  <!-- nakładki -->
+  <div id="modal" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="panel">
+      <div id="modal-body"></div>
+      <div id="modal-actions" class="panel-actions"></div>
+    </div>
+  </div>
+
+  <div id="result" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="panel result-panel">
+      <img id="result-guide" class="guide-img small" src="/misja-energia/assets/img/portrait-mozgus.webp" alt="" />
+      <h2 id="result-title"></h2>
+      <div id="result-stars" class="result-stars"></div>
+      <div id="result-detail" class="result-detail"></div>
+      <div id="result-actions" class="panel-actions"></div>
+    </div>
+  </div>
+
+  <div id="confetti" class="confetti hidden" aria-hidden="true"></div>
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game-wzory.js"></script>
+  <script src="js/game-pary.js"></script>
+  <script src="js/game-znikanie.js"></script>
+  <script src="js/game-turniej.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
