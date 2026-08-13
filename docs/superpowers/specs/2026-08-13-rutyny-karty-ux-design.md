@@ -67,6 +67,7 @@ otwarcia. Zero bibliotek.
 
 - `.routine-list`: mobile 1 kolumna; od 900 px `repeat(auto-fill, minmax(420px, 1fr))` = 2 kolumny
   na desktopie (mniej scrollowania, zgodne z feedbackiem "strony budowane za wąsko").
+  **ZAAKCEPTOWANE przez Tomka 13.08.2026** ("2 kolumny sa ok"), nie reopenować.
 - `main`: `min(100% - 2rem, 1200px)` zamiast 1000 px.
 
 ### Pora dnia
