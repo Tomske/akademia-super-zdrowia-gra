@@ -161,7 +161,7 @@ ASZP.ui = (function () {
       html += `
       <section class="zone zone-${zone.id}">
         <div class="zone-head">
-          <span class="zone-emblem zone-host"><img src="${ASZP.IMG + ASZP.CHARS[zone.host].img}" alt="${ASZP.CHARS[zone.host].name}" /></span>
+          <span class="zone-emblem zone-host"><img src="${ASZP.PIMG + ASZP.CHARS[zone.host].img}" alt="${ASZP.CHARS[zone.host].name}" /></span>
           <div>
             <h2>${zone.name}</h2>
             <p>${zone.desc}</p>

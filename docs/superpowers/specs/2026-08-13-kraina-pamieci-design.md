@@ -116,6 +116,22 @@ mechanikę (znikanie x2, pary x2, wzory x2).
 - Turniej: 6 kafelków z połączonej puli 27 treści, start od sekwencji 3, rekord =
   najdłuższa powtórzona sekwencja.
 
+## Rewizja 3: portrety gospodarzy z plakatów A3 (2026-08-13)
+
+Feedback Tomka: wygenerowane portrety gospodarzy (ciepłe, ale płaskie ilustracje z tej samej
+partii co kafelki) wyglądały "smutno" na tle nowych plakatów promocyjnych A3
+(`OS/clients/akademia-superzdrowia/04-website/plakaty/plakaty format a3/`), które mają dużo
+bardziej dynamiczny, komiksowy/superbohaterski styl (ChatGPT, ostre kontury, świecące tła,
+akcja). Portrety siedmiu gospodarzy (Mózguś, Energuś, Witaminka, Senek, Kropelka, Sprintix,
+Uśmiechanka) zostały wycięte z tych plakatów (kadr biustu 640x640, WebP) i zastąpiły
+generowane portrety wszędzie w Krainie Pamięci: karty krain na mapie (`ASZP.CHARS`), ekran
+wyboru gracza, ekran wyniku, oraz kafelek Krainy Pamięci w hubie. Tło z poświaty/efektów
+plakatu zostało celowo zachowane (nie przycinane do samej twarzy na czystym tle) bo koloruje
+się zgodnie z tematem krainy i wygląda jak mały medalion, nie sztuczna naklejka. Ósma postać
+z plakatów, Doktor Bańka (higiena), nie ma odpowiadającej krainy w v1, świadomie pominięta
+(potencjalna 7. kraina na przyszłość). Tile-content (jedzenie, emocje, itd.) NIE zostało
+tknięte, zostaje przy generowanym stylu Recraft z Rewizji 2.
+
 ## Poza zakresem v1
 
 - Konkurs FB (jak przy Rutynach: tylko UI wyniku jest gotowe, konkurs to decyzja produktowa).

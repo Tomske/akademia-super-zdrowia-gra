@@ -5,15 +5,15 @@ ASZP.VERSION = '2.0.0';
 ASZP.IMG = '../misja-energia/assets/img/';   /* ilustracje wielokrotnego użytku z Misji */
 ASZP.PIMG = 'assets/img/';                   /* ilustracje wygenerowane dla Krainy Pamięci */
 
-/* portrety bohaterów (gospodarze krain i przewodnik Mózguś) */
+/* portrety bohaterów (gospodarze krain i przewodnik Mózguś): kadry z plakatów A3, styl komiksowy */
 ASZP.CHARS = {
-  energus:     { img: 'portrait-energus.webp',     name: 'Energuś' },
-  mozgus:      { img: 'portrait-mozgus.webp',      name: 'Mózguś' },
-  witaminka:   { img: 'portrait-witaminka.webp',   name: 'Witaminka' },
-  senek:       { img: 'portrait-senek.webp',       name: 'Senek' },
-  kropelka:    { img: 'portrait-kropelka.webp',    name: 'Kropelka' },
-  sprintix:    { img: 'portrait-sprintix.webp',    name: 'Sprintix' },
-  usmiechanka: { img: 'portrait-usmiechanka.webp', name: 'Uśmiechanka' }
+  energus:     { img: 'host-energus.webp',     name: 'Energuś' },
+  mozgus:      { img: 'host-mozgus.webp',      name: 'Mózguś' },
+  witaminka:   { img: 'host-witaminka.webp',   name: 'Witaminka' },
+  senek:       { img: 'host-senek.webp',       name: 'Senek' },
+  kropelka:    { img: 'host-kropelka.webp',    name: 'Kropelka' },
+  sprintix:    { img: 'host-sprintix.webp',    name: 'Sprintix' },
+  usmiechanka: { img: 'host-usmiechanka.webp', name: 'Uśmiechanka' }
 };
 
 /* rejestr treści kafelków: klucz -> nazwa + plik (misja: true = ilustracja z Misji) */
