@@ -2,7 +2,7 @@
 window.ASZP = window.ASZP || {};
 
 ASZP.VERSION = '1.0.0';
-ASZP.IMG = '/misja-energia/assets/img/';
+ASZP.IMG = '../misja-energia/assets/img/';
 
 /* ilustracje wielokrotnego użytku z Misji: Prawdziwa Energia (spójny brand, zero nowych plików) */
 ASZP.ITEMS = {

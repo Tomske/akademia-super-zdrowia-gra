@@ -1,8 +1,8 @@
 /* Kraina Pamięci: style. Brand ASZ: granat + złoto, nagłówki Baloo 2. */
 
-@font-face { font-family: 'Baloo 2'; src: url('/misja-energia/assets/fonts/baloo-2-latin-ext-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Baloo 2'; src: url('/misja-energia/assets/fonts/baloo-2-latin-ext-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'Baloo 2'; src: url('/misja-energia/assets/fonts/baloo-2-latin-ext-800-normal.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Baloo 2'; src: url('../../misja-energia/assets/fonts/baloo-2-latin-ext-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Baloo 2'; src: url('../../misja-energia/assets/fonts/baloo-2-latin-ext-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Baloo 2'; src: url('../../misja-energia/assets/fonts/baloo-2-latin-ext-800-normal.woff2') format('woff2'); font-weight: 800; font-display: swap; }
 
 :root {
   --navy: #131f4a;
