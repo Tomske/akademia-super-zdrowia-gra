@@ -185,7 +185,7 @@ ASZP.ui = (function () {
         <span class="zone-emblem">${ASZP.TROPHY}</span>
         <div>
           <h2>${ASZP.TURNIEJ.name}</h2>
-          <p>${open ? ASZP.TURNIEJ.desc : `Zdobądź ${ASZP.TURNIEJ.unlockStars} gwiazdek w krainach, aby otworzyć turniej. Masz ${ASZP.save.starsTotal(p)}.`}</p>
+          <p>${open ? ASZP.TURNIEJ.desc : `Zdobądź ${ASZP.TURNIEJ.unlockStars} gwiazdki w krainach, aby otworzyć turniej. Masz ${ASZP.save.starsTotal(p)}.`}</p>
         </div>
         ${open ? `<span class="zone-score">Rekord: ${p.record || 0}</span>` : ''}
       </div>

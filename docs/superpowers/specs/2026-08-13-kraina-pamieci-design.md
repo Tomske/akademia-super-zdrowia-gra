@@ -27,35 +27,46 @@ Rozważone warianty:
 
 ## Świat i gry
 
-REWIZJA po feedbacku Tomka (2026-08-13, ta sama sesja): krainy nie są nazwane od mechanik,
-tylko od tematów zdrowego stylu życia, każda z bohaterem-gospodarzem z ebooka. Mechanika gry
-pozostaje przypisana 1:1 do krainy, bo naturalnie pasuje do tematu.
+REWIZJA 1 po feedbacku Tomka (2026-08-13): krainy nie są nazwane od mechanik, tylko od
+tematów zdrowego stylu życia, każda z bohaterem-gospodarzem z ebooka.
 
-Jedna przewijana mapa świata z trzema krainami po 5 poziomów oraz finałowym Turniejem:
+REWIZJA 2 po feedbacku Tomka (2026-08-13, "trochę mało, jedna kraina dla każdej postaci,
+ładniejsze grafiki"): świat rozbudowany do SZEŚCIU krain, po jednej dla każdego bohatera
+(Mózguś jako przewodnik prowadzi Turniej). Wszystkie kafelki poza Krainą Witamin dostały
+generowane ilustracje (Higgsfield, model Recraft V4.1, jeden styl: malarska ilustracja
+dziecięca, ciepłe złote światło, granatowe tło #1B2A5E, kwadratowe kafle 1:1, konwersja
+do WebP 512px w `pamiec/assets/img/`, ~45 plików po ok. 15 KB). Proste SVG buźki i ikony
+kreskowe z Rewizji 1 zostały zastąpione ilustracjami.
 
-1. **Kraina Emocji** (gospodarz Uśmiechanka, typ `pary`, klasyczne memory): odkrywanie par
-   takich samych emocji. Kafelki to rysowane inline SVG buźki 10 emocji (radość, smutek,
-   złość, strach, spokój, zdziwienie, zmęczenie, miłość, nieśmiałość, duma) w stylu herbu
-   ASZ (złota twarz, granatowe rysy). Poziomy: 3 / 4 / 6 / 8 / 10 par, gwiazdki za liczbę
-   ruchów. Wartość edukacyjna: rozpoznawanie i nazywanie emocji.
-2. **Kraina Witamin** (gospodarz Witaminka, typ `znikanie`): stół z jedzeniem do
-   zapamiętania, Gluton coś podkrada, dziecko wskazuje co. Plansza z istniejących ilustracji
-   WebP itemów z Misji. Poziomy: 3 do 6 przedmiotów, podgląd od 6 do 3 s, od poziomu 3
-   dodatkowo tasowanie pozycji, poziom 5 ma 4 rundy.
-3. **Kraina Snu** (gospodarz Senek, typ `wzory`, mechanika Simon jak w Rytuale Senka
-   z Misji): kroki wieczornego rytuału podświetlają się w kolejności, dziecko powtarza.
-   Kafelki to 8 kreskowych ikon SVG rytuału (odłóż telefon, umyj zęby, kąpiel, piżama,
-   poczytaj, przygaś światło, przytulanka, śpij). Poziomy zwiększają liczbę kafelków
-   (4 do 6), długość sekwencji (do 8) i tempo.
-4. **Turniej Mistrza Pamięci** (prowadzi Mózguś, typ `turniej`): tryb bez końca na mechanice
-   wzorów, kafelki losowane ze WSZYSTKICH trzech tematów, sekwencja rośnie aż do porażki,
-   zapisywany jest rekord długości. Odznaki: Brązowy / Srebrny / Złoty Mistrz przy rekordzie
-   6 / 9 / 12. Odblokowany od 15 gwiazdek łącznie.
+Jedna przewijana mapa świata, "dzień z Akademią od rana do wieczora", 6 krain po 5 poziomów
+oraz finałowy Turniej:
 
-Razem 15 poziomów + turniej. Wszystkie trzy krainy otwarte od startu (dziecko wybiera, co
-lubi), poziomy wewnątrz krainy odblokowywane po kolei (min. 1 gwiazdka na poprzednim).
-Na mapie każda kraina ma portret gospodarza i własny kolor tła (róż emocji, zieleń witamin,
-fiolet snu), turniej ma złote trofeum.
+1. **Kraina Energii** (Energuś, typ `znikanie`): plecak pełen prawdziwej energii, Gluton
+   podkrada zapasy. 9 ilustracji: owsianka, banan, orzechy, jogurt, kanapka, miód, poranne
+   słońce, spacer, pełna bateria.
+2. **Kraina Witamin** (Witaminka, typ `znikanie`): stół z jedzeniem, ilustracje itemów
+   z Misji (jedyny zestaw wielokrotnego użytku, już malarski).
+3. **Kraina Kropelki** (Kropelka, typ `pary`): pary tego, co nawadnia. 10 ilustracji:
+   szklanka wody, bidon, arbuz, ogórek, pomarańcza, zupa, mleko, kompot, ziołowa herbatka,
+   kokos.
+4. **Kraina Ruchu** (Sprintix, typ `wzory`): tor przeszkód Sprintixa do powtórzenia.
+   8 ilustracji: skakanka, piłka, rower, hulajnoga, trampolina, buty sportowe, pływanie,
+   latawiec.
+5. **Kraina Emocji** (Uśmiechanka, typ `pary`): pary takich samych emocji, nauka ich
+   nazywania. 10 ilustrowanych buziek: radość, smutek, złość, strach, spokój, zdziwienie,
+   zmęczenie, miłość, nieśmiałość, duma.
+6. **Kraina Snu** (Senek, typ `wzory`, mechanika z Rytuału Senka): wieczorny rytuał.
+   8 ilustracji: odłóż telefon, umyj zęby, kąpiel, piżama, poczytaj, przygaś światło,
+   przytulanka, śpij smacznie.
+7. **Turniej Mistrza Pamięci** (Mózguś, typ `turniej`): tryb bez końca, kafelki losowane
+   ze WSZYSTKICH krain (54 treści), rekord długości sekwencji, odznaki Brązowy / Srebrny /
+   Złoty Mistrz przy 6 / 9 / 12. Odblokowany od 24 gwiazdek łącznie (z 90).
+
+Razem 30 poziomów + turniej. Wszystkie krainy otwarte od startu, poziomy wewnątrz krainy
+odblokowywane po kolei (min. 1 gwiazdka na poprzednim). Na mapie każda kraina ma portret
+gospodarza i własny kolor tła (bursztyn energii, zieleń witamin, błękit kropelki, pomarańcz
+ruchu, róż emocji, fiolet snu), turniej ma złote trofeum. Mechaniki: po dwie krainy na
+mechanikę (znikanie x2, pary x2, wzory x2).
 
 ## Punkty, gwiazdki, zapis wyników
 
