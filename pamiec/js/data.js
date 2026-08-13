@@ -13,7 +13,8 @@ ASZP.CHARS = {
   senek:       { img: 'host-senek.webp',       name: 'Senek' },
   kropelka:    { img: 'host-kropelka.webp',    name: 'Kropelka' },
   sprintix:    { img: 'host-sprintix.webp',    name: 'Sprintix' },
-  usmiechanka: { img: 'host-usmiechanka.webp', name: 'Uśmiechanka' }
+  usmiechanka: { img: 'host-usmiechanka.webp', name: 'Uśmiechanka' },
+  doktorbanka: { img: 'host-doktorbanka.webp', name: 'Doktor Bańka' }
 };
 
 /* rejestr treści kafelków: klucz -> nazwa + plik (misja: true = ilustracja z Misji) */
@@ -82,7 +83,19 @@ ASZP.CONTENT = {
   poczytaj:        { name: 'Poczytaj',        img: 'sen-ksiazka.webp' },
   przygas_swiatlo: { name: 'Przygaś światło', img: 'sen-lampka.webp' },
   przytulanka:     { name: 'Przytulanka',     img: 'sen-mis.webp' },
-  spij:            { name: 'Śpij smacznie',   img: 'sen-ksiezyc.webp' }
+  spij:            { name: 'Śpij smacznie',   img: 'sen-ksiezyc.webp' },
+
+  /* Kraina Higieny (Doktor Bańka): czystość i profilaktyka */
+  mydlo:      { name: 'Mydło',                img: 'hig-mydlo.webp' },
+  zel:        { name: 'Żel do dezynfekcji',   img: 'hig-zel.webp' },
+  recznik:    { name: 'Ręcznik',              img: 'hig-recznik.webp' },
+  grzebien:   { name: 'Grzebień',             img: 'hig-grzebien.webp' },
+  chusteczki: { name: 'Chusteczki',           img: 'hig-chusteczki.webp' },
+  plaster:    { name: 'Plaster',              img: 'hig-plaster.webp' },
+  szampon:    { name: 'Szampon',              img: 'hig-szampon.webp' },
+  banki:      { name: 'Bańki mydlane',        img: 'hig-banki.webp' },
+  termometr:  { name: 'Termometr',            img: 'hig-termometr.webp' },
+  apteczka:   { name: 'Apteczka',             img: 'hig-apteczka.webp' }
 };
 
 ASZP.SETS = {
@@ -91,7 +104,8 @@ ASZP.SETS = {
   woda:     ['szklanka', 'bidon', 'arbuz', 'ogorek', 'pomarancza', 'zupa', 'mleko', 'kompot', 'herbatka', 'kokos'],
   ruch:     ['skakanka', 'pilka', 'rower', 'hulajnoga', 'trampolina', 'buty', 'plywanie', 'latawiec'],
   emocje:   ['radosc', 'smutek', 'zlosc', 'strach', 'spokoj', 'zdziwienie', 'zmeczenie', 'milosc', 'niesmialosc', 'duma'],
-  sen:      ['odloz_telefon', 'umyj_zeby', 'kapiel', 'pizama', 'poczytaj', 'przygas_swiatlo', 'przytulanka', 'spij']
+  sen:      ['odloz_telefon', 'umyj_zeby', 'kapiel', 'pizama', 'poczytaj', 'przygas_swiatlo', 'przytulanka', 'spij'],
+  higiena:  ['mydlo', 'zel', 'recznik', 'grzebien', 'chusteczki', 'plaster', 'szampon', 'banki', 'termometr', 'apteczka']
 };
 ASZP.ALL_KEYS = Object.values(ASZP.SETS).flat();
 
@@ -116,6 +130,16 @@ ASZP.ZONES = [
     desc: 'Energuś pakuje plecak pełen prawdziwej energii, ale Gluton podkrada zapasy. Zapamiętaj, co gdzie leży!',
     tip: 'Energuś radzi: powiedz sobie po kolei, co widzisz, wtedy nic Ci nie umknie.',
     howto: 'Najpierw dobrze przyjrzyj się rzeczom na planszy. Potem jedna zniknie. Wskaż na dole, czego brakuje. Pomyłka gasi iskrę, masz 3 iskry.'
+  },
+  {
+    id: 'higiena',
+    host: 'doktorbanka',
+    game: 'pary',
+    set: 'higiena',
+    name: 'Kraina Higieny',
+    desc: 'Doktor Bańka pilnuje czystości i profilaktyki. Odkrywaj karty i łącz je w pary.',
+    tip: 'Doktor Bańka radzi: powtórz nazwę przedmiotu, kiedy go odkrywasz, pamięć lubi słowa!',
+    howto: 'Odkrywaj po dwie karty. Jeśli obrazki są takie same, para zostaje odkryta. Im mniej ruchów, tym więcej gwiazdek!'
   },
   {
     id: 'jedzenie',
@@ -177,6 +201,12 @@ ASZP.LEVELS = [
   { id: 'e4', zone: 'energia', nr: 4, cfg: { count: 6, view: 4, rounds: 3, options: 4, shuffle: true } },
   { id: 'e5', zone: 'energia', nr: 5, cfg: { count: 6, view: 3, rounds: 4, options: 4, shuffle: true } },
 
+  { id: 'h1', zone: 'higiena', nr: 1, cfg: { pairs: 3 } },
+  { id: 'h2', zone: 'higiena', nr: 2, cfg: { pairs: 4 } },
+  { id: 'h3', zone: 'higiena', nr: 3, cfg: { pairs: 6 } },
+  { id: 'h4', zone: 'higiena', nr: 4, cfg: { pairs: 8 } },
+  { id: 'h5', zone: 'higiena', nr: 5, cfg: { pairs: 10 } },
+
   { id: 'z1', zone: 'jedzenie', nr: 1, cfg: { count: 3, view: 6, rounds: 3, options: 4, shuffle: false } },
   { id: 'z2', zone: 'jedzenie', nr: 2, cfg: { count: 4, view: 5, rounds: 3, options: 4, shuffle: false } },
   { id: 'z3', zone: 'jedzenie', nr: 3, cfg: { count: 5, view: 5, rounds: 3, options: 4, shuffle: true } },
@@ -217,7 +247,7 @@ ASZP.MAX_STARS = ASZP.LEVELS.length * 3;
 ASZP.TURNIEJ = {
   id: 'turniej',
   name: 'Turniej Mistrza Pamięci',
-  unlockStars: 24,
+  unlockStars: 30,
   tiles: 6,
   start: 3,
   desc: 'Mózguś miesza kafelki ze wszystkich krain. Wzór rośnie bez końca, a Twój rekord zostaje zapisany.',

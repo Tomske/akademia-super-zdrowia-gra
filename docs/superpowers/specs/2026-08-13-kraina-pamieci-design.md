@@ -132,6 +132,20 @@ z plakatów, Doktor Bańka (higiena), nie ma odpowiadającej krainy w v1, świad
 (potencjalna 7. kraina na przyszłość). Tile-content (jedzenie, emocje, itd.) NIE zostało
 tknięte, zostaje przy generowanym stylu Recraft z Rewizji 2.
 
+## Rewizja 4: siódma kraina, Doktor Bańka / Higiena (2026-08-13)
+
+Tomasz zauważył ósmą postać na plakatach A3, Doktora Bańkę (temat: higiena i profilaktyka),
+i poprosił o dodanie jej krainy. **Kraina Higieny**, gospodarz Doktor Bańka, mechanika `pary`
+(wybrana zamiast `wzory`, żeby nie powielać koncepcji "sekwencja rytuału" z Krainy Snu; też
+wyrównuje bilans mechanik do pary=3, znikanie=2, wzory=2). Wstawiona jako 2. kraina w kolejności
+mapy (po Energii, przed Witaminami: rano dziecko najpierw się myje, potem je). 10 kafelków
+(mydło, żel do dezynfekcji, ręcznik, grzebień, chusteczki, plaster, szampon, bańki mydlane,
+termometr, apteczka), wygenerowane tym samym Recraft V4.1 w tym samym stylu co pozostałe
+kafelki. Portret Doktora Bańki wycięty z plakatu tak samo jak pozostałych siedmiu gospodarzy.
+5 poziomów (h1-h5, 3/4/6/8/10 par), razem 35 poziomów + turniej. Próg turnieju podniesiony
+proporcjonalnie z 24/90 do **30/105** gwiazdek. Turniej (`ASZP.ALL_KEYS`) automatycznie objął
+też kafelki higieny, bez zmian w kodzie silnika.
+
 ## Poza zakresem v1
 
 - Konkurs FB (jak przy Rutynach: tylko UI wyniku jest gotowe, konkurs to decyzja produktowa).
