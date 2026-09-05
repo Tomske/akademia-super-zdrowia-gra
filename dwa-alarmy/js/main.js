@@ -122,16 +122,27 @@ ASZD.main = (function () {
     const p = ui.el('div', 'panel panel-szeroki');
     p.appendChild(ui.el('p', 'etykieta', T.marka));
     p.appendChild(ui.el('h2', null, T.rozdzialy));
+    p.appendChild(ui.el('p', 'suma-gwiazdek',
+      T.gwiazdkiRazem(ASZD.save.gwiazdekRazem(), ASZD.save.gwiazdekMax())));
 
     const lista = ui.el('div', 'lista-rozdzialow');
     ASZD.ROZDZIALY.forEach((r) => {
-      const ukonczony = ASZD.save.get().ukonczone.indexOf(r.nr) !== -1;
       const otwarty = ASZD.save.odblokowany(r.nr);
+      const gw = ASZD.save.gwiazdkiRozdzialu(r.nr);
       const b = ui.el('button', 'rozdzial' + (otwarty ? '' : ' rozdzial-zamkniety'));
       b.appendChild(ui.el('span', 'rozdzial-nr', r.nr));
       const t = ui.el('span', 'rozdzial-tytul', r.tytul);
       b.appendChild(t);
-      b.appendChild(ui.el('span', 'rozdzial-stan', ukonczony ? '✓' : (otwarty ? '' : '🔒')));
+      if (gw) {
+        const g = ui.el('span', 'rozdzial-gwiazdki');
+        g.setAttribute('aria-label', T.gwiazdki + ': ' + gw + ' z 3');
+        for (let i = 0; i < 3; i++) {
+          g.appendChild(ui.el('span', 'gwiazdka' + (i < gw ? ' gwiazdka-ma' : ''), '★'));
+        }
+        b.appendChild(g);
+      } else {
+        b.appendChild(ui.el('span', 'rozdzial-stan', otwarty ? '' : '🔒'));
+      }
       if (otwarty) {
         b.addEventListener('click', () => { ASZD.audio.klik(); graj(r.nr); });
       } else {

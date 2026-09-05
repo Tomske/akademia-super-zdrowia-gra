@@ -6,6 +6,22 @@ ASZD.rozdzialy = (function () {
   const ui = ASZD.ui;
   const T = ASZD.T;
 
+  /* Sesja rozdziału: liczy pomyłki, z nich biorą się gwiazdki. Bez tego nic nie kosztowało
+     i całą grę dało się przejść klikając wszystko po kolei. */
+  let sesja = null;
+  function nowaSesja() { sesja = { bledy: 0, widget: null }; }
+  function blad() {
+    ASZD.save.dodajPomylke();
+    if (!sesja) return;
+    sesja.bledy++;
+    if (sesja.widget) sesja.widget.aktualizuj(ASZD.save.gwiazdkiZa(sesja.bledy));
+  }
+  function licznikGwiazdek() {
+    const w = ui.gwiazdkiLive();
+    if (sesja) { sesja.widget = w; w.aktualizuj(ASZD.save.gwiazdkiZa(sesja.bledy)); }
+    return w;
+  }
+
   function tasuj(a) {
     const t = a.slice();
     for (let i = t.length - 1; i > 0; i--) {
@@ -49,12 +65,19 @@ ASZD.rozdzialy = (function () {
 
   function zakoncz(nr, wniosek, onNext) {
     const osiagniecie = ASZD.OSIAGNIECIA['r' + nr];
+    const bledy = sesja ? sesja.bledy : 0;
+    const gwiazdek = ASZD.save.gwiazdkiZa(bledy);
+    const poprzednio = ASZD.save.gwiazdkiRozdzialu(nr);
     ASZD.save.ukonczRozdzial(nr, osiagniecie);
-    ASZD.audio.rozdzial();
-    ui.konfetti();
+    ASZD.save.zapiszGwiazdki(nr, gwiazdek);
+    ASZD.audio.rozdzial(gwiazdek);
+    if (gwiazdek === 3) ui.konfetti();
     ekran(nr, null, (b) => {
       b.appendChild(ui.el('p', 'etykieta', T.ukonczony));
       b.appendChild(ui.el('h2', null, T.wynik));
+      b.appendChild(ui.gwiazdkiDuze(gwiazdek));
+      b.appendChild(ui.el('p', 'ocena', bledy === 0 ? T.bezBledu
+        : (bledy === 1 ? T.jednaPomylka : T.wielePomylek)));
       const w = ui.el('div', 'wniosek');
       w.appendChild(ui.el('p', 'wniosek-naglowek', T.wniosek));
       const p = ui.el('p', 'wniosek-tekst');
@@ -63,6 +86,9 @@ ASZD.rozdzialy = (function () {
       b.appendChild(w);
       b.appendChild(ui.el('p', 'osiagniecie', T.osiagniecie + osiagniecie));
       b.appendChild(ui.przycisk(nr < 5 ? T.nastepny : T.zakonczenie, onNext));
+      if (gwiazdek < 3) {
+        b.appendChild(ui.przycisk(T.jeszczeRaz, () => ASZD.main.graj(nr), 'btn-ghost'));
+      }
       b.appendChild(ui.przycisk(T.wyborRozdzialu, () => ASZD.main.pokazRozdzialy(), 'btn-ghost'));
     });
   }
@@ -70,6 +96,7 @@ ASZD.rozdzialy = (function () {
   /* ---------- rozdział 1: rozejrzyj się przed działaniem ---------- */
 
   function rozdzial1(onNext) {
+    nowaSesja();
     const D = ASZD.R1;
     const potrzeba = D.potrzeba[ASZD.save.tryb()];
     const znalezione = [];
@@ -87,7 +114,7 @@ ASZD.rozdzialy = (function () {
       const plansza = ui.planszaHotspotow('r1-scena', D.punkty, (p, node) => {
         if (znalezione.indexOf(p.id) !== -1) { fb.pokaz('info', D.powtorka); return; }
         if (!p.dobry) {
-          ASZD.audio.zle(); ASZD.save.dodajPomylke();
+          ASZD.audio.zle(); blad();
           fb.pokaz('zle', p.tekst);
           return;
         }
@@ -107,7 +134,10 @@ ASZD.rozdzialy = (function () {
       const pod = ui.panelPod();
       post = ui.postep(D.licznik, znalezione.length, potrzeba);
       fb = ui.feedback();
-      pod.appendChild(post);
+      const pasek = ui.el('div', 'pasek-zadania');
+      pasek.appendChild(post);
+      pasek.appendChild(licznikGwiazdek());
+      pod.appendChild(pasek);
       pod.appendChild(fb);
     }
 
@@ -125,7 +155,7 @@ ASZD.rozdzialy = (function () {
         b.appendChild(fb);
         b.appendChild(ui.siatkaWyborow(S.opcje, (o, node) => {
           if (!o.dobry) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             node.classList.add('wybor-zly');
             fb.pokaz('zle', S.zle);
             return;
@@ -140,6 +170,7 @@ ASZD.rozdzialy = (function () {
   /* ---------- rozdział 2: znajdź powtarzający się rytm ---------- */
 
   function rozdzial2(onNext) {
+    nowaSesja();
     const D = ASZD.R2;
     const tryb = ASZD.save.tryb();
     const ile = D.paneli[tryb];
@@ -158,11 +189,23 @@ ASZD.rozdzialy = (function () {
         b.appendChild(ui.el('h2', null, D.tytul));
         b.appendChild(ui.el('p', 'opis', D.opis[tryb]));
         const post = ui.postep(D.licznik, 0, rytmicznych);
-        b.appendChild(post);
+        const pasek = ui.el('div', 'pasek-zadania');
+        pasek.appendChild(post);
+        pasek.appendChild(licznikGwiazdek());
+        b.appendChild(pasek);
         const status = ui.el('p', 'status', D.status.obserwuj);
         b.appendChild(status);
+        /* Bez tej pauzy dziecko klikało wszystkie panele po kolei i wygrywało bez patrzenia.
+           Teraz pierwsze sekundy służą wyłącznie obserwacji. */
+        let gotowe = false;
+        const zegar = ui.odliczanie(ASZD.save.maly() ? 3 : 5, () => {
+          gotowe = true;
+          status.textContent = T.terazWybierz;
+          siatka.classList.add('panele-aktywne');
+        });
+        b.appendChild(zegar);
 
-        const siatka = ui.el('div', 'panele');
+        const siatka = ui.el('div', 'panele czekaja');
         const panele = [];
         for (let i = 0; i < ile; i++) {
           const rytm = rytmiczne.indexOf(i) !== -1;
@@ -195,9 +238,10 @@ ASZD.rozdzialy = (function () {
         b.appendChild(potwierdz);
 
         function kliknij(d) {
+          if (!gotowe) { ASZD.audio.wskazowka(); fb.pokaz('info', D.opis[tryb]); return; }
           if (d.el.dataset.zablokowany === '1') { fb.pokaz('info', D.powtorka); return; }
           if (!d.rytm) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             d.el.classList.add('panelik-zly');
             setTimeout(() => d.el.classList.remove('panelik-zly'), 600);
             fb.pokaz('zle', D.zly);
@@ -249,6 +293,7 @@ ASZD.rozdzialy = (function () {
   /* ---------- rozdział 3: co sprawdzić najpierw ---------- */
 
   function rozdzial3(onNext) {
+    nowaSesja();
     const D = ASZD.R3;
     const kolejnosc = [];
 
@@ -272,7 +317,10 @@ ASZD.rozdzialy = (function () {
       }, true);
       ui.scena().appendChild(p);
       const pod = ui.panelPod();
-      pod.appendChild(ui.postep(D.licznik, kolejnosc.length, 2));
+      const pasek = ui.el('div', 'pasek-zadania');
+      pasek.appendChild(ui.postep(D.licznik, kolejnosc.length, 2));
+      pasek.appendChild(licznikGwiazdek());
+      pod.appendChild(pasek);
       pod.appendChild(ui.el('p', 'opis', kolejnosc.length ? D.drugi(kolejnosc[0]) : D.podpowiedz));
     }
 
@@ -286,7 +334,7 @@ ASZD.rozdzialy = (function () {
         b.appendChild(fb);
         b.appendChild(ui.siatkaWyborow(W.opcje, (o, node) => {
           if (!o.dobry) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             node.classList.add('wybor-zly');
             fb.pokaz('zle', W.zle);
             return;
@@ -318,6 +366,7 @@ ASZD.rozdzialy = (function () {
   /* ---------- rozdział 4: fakt, hipoteza, domysł ---------- */
 
   function rozdzial4(onNext) {
+    nowaSesja();
     const D = ASZD.R4;
     const maly = ASZD.save.maly();
     /* w trybie 4-7 mniej kart, ale zawsze po jednej z każdej kategorii */
@@ -338,7 +387,10 @@ ASZD.rozdzialy = (function () {
         b.appendChild(ui.el('h2', null, D.tytul));
         b.appendChild(ui.el('p', 'opis', D.instrukcja(i + 1, pula.length)));
         const post = ui.postep(D.licznik, i, pula.length);
-        b.appendChild(post);
+        const pasek = ui.el('div', 'pasek-zadania');
+        pasek.appendChild(post);
+        pasek.appendChild(licznikGwiazdek());
+        b.appendChild(pasek);
 
         const token = ui.el('div', 'karta');
         token.appendChild(ui.el('p', 'karta-naglowek', D.naglowekKarty));
@@ -360,7 +412,7 @@ ASZD.rozdzialy = (function () {
 
         function upusc(strefa) {
           if (strefa.id !== karta.kat) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             strefa.el.classList.add('strefa-zla');
             setTimeout(() => strefa.el.classList.remove('strefa-zla'), 600);
             fb.pokaz('zle', D.zle);
@@ -397,6 +449,7 @@ ASZD.rozdzialy = (function () {
   /* ---------- rozdział 5: role, plan i kolejność ---------- */
 
   function rozdzial5(onNext) {
+    nowaSesja();
     const D = ASZD.R5;
     let z = 0;
 
@@ -414,7 +467,10 @@ ASZD.rozdzialy = (function () {
         b.appendChild(ui.el('h2', null, D.tytul));
         b.appendChild(ui.el('p', 'opis', D.instrukcja));
         const post = ui.postep(D.licznik, z, D.zadania.length);
-        b.appendChild(post);
+        const pasek = ui.el('div', 'pasek-zadania');
+        pasek.appendChild(post);
+        pasek.appendChild(licznikGwiazdek());
+        b.appendChild(pasek);
 
         const strefa = ui.el('div', 'strefa strefa-zadanie');
         strefa.appendChild(ui.el('p', 'strefa-tytul', D.krok(z + 1)));
@@ -446,7 +502,7 @@ ASZD.rozdzialy = (function () {
         function upusc(_, token) {
           const imie = token.dataset.imie;
           if (imie !== zad.bohater) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             token.classList.add('bohater-zly');
             setTimeout(() => token.classList.remove('bohater-zly'), 600);
             fb.pokaz('zle', D.zle(imie));
@@ -475,7 +531,7 @@ ASZD.rozdzialy = (function () {
         b.appendChild(fb);
         b.appendChild(ui.siatkaWyborow(P.opcje, (o, node) => {
           if (!o.dobry) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             node.classList.add('wybor-zly');
             fb.pokaz('zle', P.odpowiedzi[o.id]);
             return;
@@ -495,7 +551,10 @@ ASZD.rozdzialy = (function () {
         b.appendChild(ui.el('p', 'etykieta', K.etykieta));
         b.appendChild(ui.el('h2', null, K.tytul));
         const post = ui.postep(K.licznik, 0, K.kroki.length);
-        b.appendChild(post);
+        const pasek = ui.el('div', 'pasek-zadania');
+        pasek.appendChild(post);
+        pasek.appendChild(licznikGwiazdek());
+        b.appendChild(pasek);
 
         const tablica = ui.el('div', 'strefa strefa-tablica');
         tablica.appendChild(ui.el('p', 'strefa-tytul', K.tablica));
@@ -528,7 +587,7 @@ ASZD.rozdzialy = (function () {
         function upusc(_, token) {
           const id = token.dataset.id;
           if (id === K.pulapka.id) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             token.classList.add('krok-zly');
             setTimeout(() => token.classList.remove('krok-zly'), 600);
             fb.pokaz('zle', K.zlaPulapka);
@@ -536,7 +595,7 @@ ASZD.rozdzialy = (function () {
           }
           const oczekiwany = K.kroki[ulozone.length];
           if (id !== oczekiwany.id) {
-            ASZD.audio.zle(); ASZD.save.dodajPomylke();
+            ASZD.audio.zle(); blad();
             token.classList.add('krok-zly');
             setTimeout(() => token.classList.remove('krok-zly'), 600);
             fb.pokaz('zle', K.zlaKolejnosc(oczekiwany.tekst));

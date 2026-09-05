@@ -13,6 +13,17 @@ ASZD.BOHATEROWIE = {
   usmiechanka: 'Uśmiechanka'
 };
 
+/* mówca w dialogu -> plik portretu wycięty z ilustracji 02 */
+ASZD.PORTRETY = {
+  'ENERGUŚ': 'energus',
+  'MÓZGUŚ': 'mozgus',
+  'KROPELKA': 'kropelka',
+  'SENEK': 'senek',
+  'WITAMINKA': 'witaminka',
+  'SPRINTIX': 'sprintix',
+  'UŚMIECHANKA': 'usmiechanka'
+};
+
 ASZD.OSIAGNIECIA = {
   r1: 'Pierwszy krok',
   r2: 'Czujne oko',
@@ -26,16 +37,12 @@ ASZD.OSIAGNIECIA = {
 ASZD.DIALOGI = {
   1: {
     maly: [
-      ['ENERGUŚ', 'Akademia znów świeci! Sprawdźmy, czy wszyscy są gotowi.'],
-      ['UŚMIECHANKA', 'Zanim ruszymy, zapytajmy zespół, jak się czuje.'],
       ['KROPELKA', 'Mam wodę i spokojny plan. Bezpieczeństwo jest pierwsze.'],
       ['SENEK', 'Słyszę cichutkie: pik… pik… Może warto się zatrzymać?']
     ],
     duzy: [
       ['ENERGUŚ', 'Wracamy do Akademii po przerwie. Zanim uruchomimy laboratoria, sprawdźmy gotowość zespołu.'],
-      ['UŚMIECHANKA', 'Krótka rozmowa może ujawnić więcej niż głośny komunikat.'],
       ['KROPELKA', 'Zadbajmy o wodę, granice strefy i bezpieczną kolejność działań.'],
-      ['WITAMINKA', 'Energia zespołu nie jest nieskończona. Rozdzielmy ją rozsądnie.'],
       ['SENEK', 'Z dolnego panelu wraca słaby impuls. Nie jest pilny, ale jest regularny.']
     ]
   },
@@ -46,8 +53,7 @@ ASZD.DIALOGI = {
     ],
     duzy: [
       ['SENEK', 'Impuls powtarza się co osiem sekund. Jest słaby, ale regularny.'],
-      ['MÓZGUŚ', 'Nie zgadujmy. Porównaj jasność, rytm i położenie paneli.'],
-      ['SPRINTIX', 'Pobiegnę po pomoc, kiedy potwierdzimy, czego właściwie szukamy.']
+      ['MÓZGUŚ', 'Nie zgadujmy. Porównaj jasność, rytm i położenie paneli.']
     ]
   },
   3: {
@@ -57,8 +63,7 @@ ASZD.DIALOGI = {
     ],
     duzy: [
       ['ENERGUŚ', 'Uruchomił się czerwony alarm w sali ruchu. Jednocześnie cichy impuls przyspieszył.'],
-      ['KROPELKA', 'Najpierw oceńmy bezpieczeństwo ludzi, potem źródło sygnału, albo odwróćmy kolejność, jeśli dane to uzasadniają.'],
-      ['UŚMIECHANKA', 'Powiedz zespołowi, dlaczego wybierasz taką kolejność.']
+      ['KROPELKA', 'Najpierw oceńmy bezpieczeństwo ludzi, potem źródło sygnału, albo odwróćmy kolejność, jeśli dane to uzasadniają.']
     ]
   },
   4: {
@@ -77,7 +82,6 @@ ASZD.DIALOGI = {
     ],
     duzy: [
       ['ENERGUŚ', 'Mamy obserwacje, hipotezy i dwa alarmy. Teraz potrzebujemy wspólnego planu.'],
-      ['WITAMINKA', 'Uwzględnijmy energię, odpoczynek i potrzeby każdego członka zespołu.'],
       ['UŚMIECHANKA', 'Rozdziel odpowiedzialność i upewnij się, że każdy zna swój krok.']
     ]
   }
@@ -110,8 +114,12 @@ ASZD.R1 = {
       tekst: 'Kropelka przygotowała wodę i bezpieczną strefę. Zespół może działać bez pośpiechu.' },
     { id: 'panel', etykieta: 'PANEL', x: 6, y: 34, r: 12, dobry: true,
       tekst: 'Panel wskazuje kierunek i zamkniętą strefę. To fakt, który trzeba przekazać całej drużynie.' },
-    { id: 'door', etykieta: 'DRZWI', x: 34, y: 32, r: 11, dobry: false,
-      tekst: 'Same drzwi nie mówią, czy wejście jest bezpieczne. Najpierw spójrz na ludzi, przygotowanie i dane.' }
+    { id: 'door', etykieta: 'DRZWI', x: 34, y: 32, r: 10, dobry: false,
+      tekst: 'Same drzwi nie mówią, czy wejście jest bezpieczne. Najpierw spójrz na ludzi, przygotowanie i dane.' },
+    { id: 'profesor', etykieta: 'PROFESOR', x: 53, y: 30, r: 8, dobry: false,
+      tekst: 'Profesor czeka na wasze dane. On też ich jeszcze nie ma, więc nie zapyta go się o gotową odpowiedź.' },
+    { id: 'remont', etykieta: 'REMONT', x: 80, y: 26, r: 10, dobry: false,
+      tekst: 'Za taśmą trwa remont. Ciekawe, ale to nie mówi nic o tym, czego szuka zespół.' }
   ],
   decyzja: {
     etykieta: 'Decyzja • wykorzystaj zebrane wskazówki',
@@ -360,5 +368,13 @@ ASZD.T = {
   finalOsiagniecia: 'Osiągnięcia: ',
   finalSlady: function (a, b) { return 'Ślady uważności: ' + a + '/' + b + '\nPostęp zapisano lokalnie.'; },
   nowaPrzygoda: 'NOWA PRZYGODA',
+  gwiazdki: 'Gwiazdki',
+  gwiazdkiRazem: function (a, b) { return 'Gwiazdki: ' + a + ' z ' + b; },
+  bezBledu: 'Komplet! Ani jednej pomyłki.',
+  jednaPomylka: 'Prawie komplet. Jedna pomyłka.',
+  wielePomylek: 'Zadanie zaliczone. Spróbuj jeszcze raz i uważaj przy wyborze.',
+  jeszczeRaz: 'POWTÓRZ NA TRZY GWIAZDKI',
+  obserwuj: function (s) { return 'Popatrz spokojnie… ' + s; },
+  terazWybierz: 'TERAZ WYBIERZ PANELE',
   inneGry: 'Inne gry Akademii'
 };

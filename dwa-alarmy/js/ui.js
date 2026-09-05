@@ -62,13 +62,79 @@ ASZD.ui = (function () {
     return bar;
   }
 
-  /* karta dialogu: portret mówcy zastąpiony inicjałem, bo nie mamy wycinków postaci */
+  /* karta dialogu z portretem mówcy wyciętym z ilustracji: dzieci przywiązują się
+     do twarzy, a sama nazwa wersalikami nic dla nich nie znaczy */
   function kartaDialogu(mowca, tekst) {
     const k = el('div', 'story');
-    const s = el('p', 'story-mowca', mowca);
-    k.appendChild(s);
-    k.appendChild(wieloliniowy(el('p', 'story-tekst'), tekst));
+    const plik = ASZD.PORTRETY[mowca];
+    if (plik) {
+      const img = el('img', 'story-portret');
+      img.src = 'assets/img/portret-' + plik + '.webp';
+      img.alt = '';
+      k.appendChild(img);
+    }
+    const tresc = el('div', 'story-tresc');
+    tresc.appendChild(el('p', 'story-mowca', mowca));
+    tresc.appendChild(wieloliniowy(el('p', 'story-tekst'), tekst));
+    k.appendChild(tresc);
     return k;
+  }
+
+  /* licznik gwiazdek widoczny w trakcie zadania: dziecko widzi, że pomyłka kosztuje,
+     zanim zacznie klikać na oślep */
+  function gwiazdkiLive() {
+    const w = el('div', 'gwiazdki-live');
+    w.setAttribute('aria-label', ASZD.T.gwiazdki);
+    const g = [0, 1, 2].map(() => {
+      const i = el('span', 'gwiazdka gwiazdka-ma', '★');
+      w.appendChild(i);
+      return i;
+    });
+    w.aktualizuj = (n) => {
+      g.forEach((x, i) => {
+        const byla = x.classList.contains('gwiazdka-ma');
+        x.classList.toggle('gwiazdka-ma', i < n);
+        if (byla && i >= n) {
+          x.classList.remove('gwiazdka-gasnie');
+          void x.offsetWidth;
+          x.classList.add('gwiazdka-gasnie');
+        }
+      });
+    };
+    return w;
+  }
+
+  /* duże gwiazdki na ekranie wyniku, wjeżdżają po kolei */
+  function gwiazdkiDuze(n) {
+    const w = el('div', 'gwiazdki-duze');
+    for (let i = 0; i < 3; i++) {
+      const g = el('span', 'gwiazdka-duza' + (i < n ? ' gwiazdka-zdobyta' : ''), '★');
+      g.style.animationDelay = (i * 0.22) + 's';
+      w.appendChild(g);
+    }
+    return w;
+  }
+
+  /* pasek fazy obserwacji: wymusza patrzenie, zanim można klikać */
+  function odliczanie(sekundy, onKoniec) {
+    const w = el('div', 'odliczanie');
+    const tekst = el('p', 'odliczanie-tekst', ASZD.T.obserwuj(sekundy));
+    const tor = el('div', 'postep-tor');
+    const fill = el('div', 'odliczanie-fill');
+    tor.appendChild(fill);
+    w.appendChild(tekst);
+    w.appendChild(tor);
+    const start = performance.now();
+    const total = sekundy * 1000;
+    (function tik(t) {
+      const uplyw = (t || performance.now()) - start;
+      const zostalo = Math.max(0, total - uplyw);
+      fill.style.width = (zostalo / total * 100) + '%';
+      tekst.textContent = ASZD.T.obserwuj(Math.ceil(zostalo / 1000));
+      if (zostalo > 0) requestAnimationFrame(tik);
+      else { w.remove(); onKoniec(); }
+    })();
+    return w;
   }
 
   function przycisk(tekst, onClick, wariant) {
@@ -202,5 +268,6 @@ ASZD.ui = (function () {
   }
 
   return { el, wieloliniowy, ustawTlo, wyczysc, panel, panelPod, naglowekGry, kartaDialogu,
-    przycisk, siatkaWyborow, postep, feedback, planszaHotspotow, herb, konfetti, scena };
+    przycisk, siatkaWyborow, postep, feedback, planszaHotspotow, herb, konfetti, scena,
+    gwiazdkiLive, gwiazdkiDuze, odliczanie };
 })();

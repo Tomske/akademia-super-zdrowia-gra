@@ -89,7 +89,12 @@ ASZD.audio = (function () {
     zle() { sfx(180, 0.28, 'sawtooth', 0.16, 0, 100); },
     wskazowka() { sfx(440, 0.14, 'sine', 0.13, 0, 520); },
 
-    rozdzial() { [523, 659, 784].forEach((f, i) => sfx(f, 0.2, 'triangle', 0.2, i * 0.12)); },
+    rozdzial(gwiazdek) {
+      /* im więcej gwiazdek, tym dłuższa i wyższa fanfara: nagroda ma być słyszalnie różna */
+      const frazy = { 1: [523], 2: [523, 659], 3: [523, 659, 784, 1047] };
+      (frazy[gwiazdek] || frazy[3]).forEach((f, i) => sfx(f, 0.22, 'triangle', 0.21, i * 0.13));
+    },
+    gwiazdka(i) { sfx(660 + i * 180, 0.18, 'triangle', 0.2); },
     fanfara() { [523, 659, 784, 1047, 784, 1047].forEach((f, i) => sfx(f, 0.24, 'triangle', 0.21, i * 0.15)); }
   };
 })();

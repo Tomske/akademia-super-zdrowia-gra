@@ -10,6 +10,7 @@ ASZD.save = (function () {
     wiek: null,            // 'maly' | 'duzy'
     rozdzial: 1,           // najdalszy odblokowany
     ukonczone: [],         // numery ukończonych rozdziałów
+    gwiazdki: {},          // nr rozdziału -> najlepszy wynik 1..3
     osiagniecia: [],       // nazwy zdobytych osiągnięć
     obserwacje: 0,         // ślady uważności: trafione wskazówki i rytmy
     obserwacjeMax: 0,
@@ -42,6 +43,19 @@ ASZD.save = (function () {
     maZapis() { return state.wiek !== null && (state.ukonczone.length > 0 || state.rozdzial > 1); },
     maly() { return state.wiek === 'maly'; },
     tryb() { return state.wiek || 'duzy'; },
+
+    /* 3 gwiazdki bez pomyłki, 2 przy jednej lub dwóch, 1 przy większej liczbie.
+       Zera nie ma: dziecko zawsze kończy rozdział, ale ma po co wrócić. */
+    gwiazdkiZa(bledy) { return bledy === 0 ? 3 : (bledy <= 2 ? 2 : 1); },
+    zapiszGwiazdki(nr, ile) {
+      if (!state.gwiazdki[nr] || ile > state.gwiazdki[nr]) state.gwiazdki[nr] = ile;
+      persist();
+    },
+    gwiazdkiRozdzialu(nr) { return state.gwiazdki[nr] || 0; },
+    gwiazdekRazem() {
+      return Object.keys(state.gwiazdki).reduce((s, k) => s + state.gwiazdki[k], 0);
+    },
+    gwiazdekMax() { return ASZD.ROZDZIALY.length * 3; },
 
     ukonczRozdzial(nr, osiagniecie) {
       if (state.ukonczone.indexOf(nr) === -1) state.ukonczone.push(nr);
