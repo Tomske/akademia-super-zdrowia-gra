@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Dwa Alarmy: przygoda o uważności dla dzieci. Zauważ cichy sygnał, oddziel fakt od domysłu i ułóż plan z drużyną Akademii. Bez logowania i bez zbierania danych." />
+  <meta name="theme-color" content="#131f4a" />
+  <link rel="canonical" href="https://gra.akademiasuperzdrowia.pl/dwa-alarmy/" />
+  <link rel="icon" type="image/svg+xml" href="../icon.svg" />
+  <title>Dwa Alarmy · Akademia Super Zdrowia</title>
+  <link rel="stylesheet" href="css/dwa-alarmy.css" />
+</head>
+<body>
+  <noscript><p style="padding:20px;text-align:center">Ta gra potrzebuje włączonego JavaScript.</p></noscript>
+
+  <div id="tlo" class="tlo" aria-hidden="true"></div>
+  <div class="scrim" aria-hidden="true"></div>
+
+  <main id="scena" class="scena"></main>
+
+  <div id="nakladka" class="overlay hidden" role="dialog" aria-modal="true">
+    <div id="nakladka-tresc" class="panel"></div>
+  </div>
+
+  <div id="konfetti" class="konfetti hidden" aria-hidden="true"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/dnd.js"></script>
+  <script src="js/chapters.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+/* Dwa Alarmy: style. Brand ASZ: granat + złoto, nagłówki Baloo 2.
+   Tryb 4-7 zmienia rozmiary przez [data-tryb], tak jak AgeModeManager w oryginale. */
+
+@font-face { font-family: 'Baloo 2'; src: url('../../misja-energia/assets/fonts/baloo-2-latin-ext-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Baloo 2'; src: url('../../misja-energia/assets/fonts/baloo-2-latin-ext-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Baloo 2'; src: url('../../misja-energia/assets/fonts/baloo-2-latin-ext-800-normal.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+
+/* Baloo 2 (subset latin-ext) renderuje wielkie Ę (U+0118) i Ź (U+0179) jako małe litery:
+   "ZABEZPIECZ STREFĘ" wychodziło jako "STREFę". Dla tych dwóch znaków, i tylko dla nich,
+   sięgamy po font systemowy. Gdy żaden local() nie istnieje (Android, iOS), przeglądarka
+   spada do kolejnej rodziny ze stosu font-family, czyli i tak do fontu systemowego. */
+@font-face {
+  font-family: 'Baloo 2'; font-weight: 400; font-display: swap;
+  src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial'), local('DejaVu Sans');
+  unicode-range: U+0118, U+0179;
+}
+@font-face {
+  font-family: 'Baloo 2'; font-weight: 700; font-display: swap;
+  src: local('Segoe UI Bold'), local('Segoe UI'), local('Roboto Bold'), local('Roboto'), local('Helvetica Neue'), local('Arial Bold'), local('Arial'), local('DejaVu Sans Bold');
+  unicode-range: U+0118, U+0179;
+}
+@font-face {
+  font-family: 'Baloo 2'; font-weight: 800; font-display: swap;
+  src: local('Segoe UI Bold'), local('Segoe UI'), local('Roboto Black'), local('Roboto Bold'), local('Roboto'), local('Helvetica Neue'), local('Arial Bold'), local('Arial'), local('DejaVu Sans Bold');
+  unicode-range: U+0118, U+0179;
+}
+
+:root {
+  --navy: #131f4a;
+  --navy2: #1c2c66;
+  --panel: rgba(12, 19, 46, .9);
+  --gold: #FFC300;
+  --gold2: #ffd54d;
+  --ink: #ffffff;
+  --line: rgba(255, 255, 255, .16);
+  --good: #81C784;
+  --bad: #FF8A80;
+  --body: 17px;
+  --btn-h: 52px;
+  --radius: 18px;
+}
+
+/* tryb 4-7: większy tekst, wyższe przyciski, więcej powietrza */
+html[data-tryb="maly"] {
+  --body: 20px;
+  --btn-h: 62px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--navy);
+  color: var(--ink);
+  font-family: 'Segoe UI', Verdana, sans-serif;
+  font-size: var(--body);
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+h1, h2, h3, .btn, .wybor { font-family: 'Baloo 2', 'Segoe UI', sans-serif; }
+h1 { font-weight: 800; font-size: clamp(30px, 7vw, 48px); margin: 2px 0 4px; }
+h2 { font-weight: 800; font-size: clamp(21px, 4.4vw, 30px); margin: 0 0 10px; }
+h3 { font-weight: 800; font-size: clamp(19px, 3.6vw, 24px); margin: 0 0 6px; }
+img { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+.hidden { display: none !important; }
+
+/* ---------- tło: ilustracja na cały ekran + przyciemnienie ---------- */
+.tlo {
+  position: fixed; inset: 0; z-index: 0;
+  background-size: cover;
+  background-position: center 22%;
+  background-repeat: no-repeat;
+}
+.tlo-wejscie { animation: tloIn .5s ease both; }
+@keyframes tloIn { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
+.scrim {
+  position: fixed; inset: 0; z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(10, 16, 40, .5) 0%, rgba(10, 16, 40, .18) 34%, rgba(10, 16, 40, .72) 82%),
+    radial-gradient(120% 80% at 50% 0%, rgba(28, 44, 102, .22), transparent 70%);
+}
+
+.scena {
+  position: relative; z-index: 2;
+  min-height: 100svh;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center;
+  justify-content: safe center;
+  gap: 14px;
+  padding: max(14px, env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom));
+}
+
+/* ---------- panel treści ---------- */
+.panel {
+  width: min(100%, 620px);
+  background: var(--panel);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 22px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  animation: panelIn .32s ease both;
+}
+.panel-szeroki { width: min(100%, 760px); }
+.panel-pod { padding: 16px 18px; }
+.herb { width: 76px; height: 76px; margin: 0 auto 2px; }
+.panel-menu { text-align: center; align-items: stretch; }
+@keyframes panelIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.etykieta {
+  text-transform: uppercase; letter-spacing: .13em; font-weight: 700;
+  font-size: .74em; opacity: .75; margin: 0; color: var(--gold2);
+}
+.opis { margin: 0; opacity: .9; }
+.podtytul { margin: 0; opacity: .8; }
+.tytul-gry { letter-spacing: .01em; }
+.druzyna { margin: 6px 0 0; opacity: .7; font-size: .85em; line-height: 1.6; }
+.fineprint { opacity: .55; font-size: .78em; margin: 4px 0 0; }
+.status { margin: 0; font-weight: 700; letter-spacing: .08em; font-size: .8em; color: var(--gold2); }
+.licznik-ok { margin: 0; color: var(--good); font-weight: 700; }
+
+/* ---------- pasek górny ---------- */
+.topbar {
+  width: min(100%, 620px);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.topinfo { display: flex; flex-direction: column; line-height: 1.2; }
+.topnr { font-size: .72em; text-transform: uppercase; letter-spacing: .12em; opacity: .7; }
+.toptytul { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 1.05em; }
+.iconbtn {
+  width: 46px; height: 46px; flex: none; border-radius: 50%;
+  background: rgba(255, 255, 255, .1); border: 1px solid var(--line);
+  font-size: 18px; line-height: 1;
+}
+.iconbtn:hover { background: rgba(255, 255, 255, .18); }
+
+/* ---------- przyciski ---------- */
+.btn {
+  border: 0; border-radius: 999px;
+  min-height: var(--btn-h);
+  padding: 10px 24px; font-weight: 700; font-size: 1em;
+  transition: transform .12s ease, filter .12s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.btn-gold { background: linear-gradient(180deg, var(--gold2), var(--gold)); color: #4a2f00; }
+.btn-ghost { background: transparent; border: 2px solid rgba(255, 255, 255, .3); color: var(--ink); }
+.btn-nieaktywny { opacity: .4; pointer-events: none; }
+
+/* ---------- karta dialogu ---------- */
+.story {
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.story-mowca {
+  margin: 0 0 6px; font-family: 'Baloo 2', sans-serif; font-weight: 800;
+  letter-spacing: .06em; color: var(--gold2); font-size: .92em;
+}
+.story-tekst { margin: 0; }
+
+/* ---------- wybory ---------- */
+.wybory { display: flex; flex-direction: column; gap: 10px; }
+.wybor {
+  text-align: left; border-radius: var(--radius);
+  border: 1px solid var(--line); background: rgba(255, 255, 255, .07);
+  padding: 14px 16px; min-height: var(--btn-h); font-weight: 700;
+  transition: background .12s ease, transform .12s ease, border-color .12s ease;
+}
+.wybor:hover { background: rgba(255, 255, 255, .13); transform: translateY(-1px); }
+.wybor-dobry { border-color: var(--good); background: rgba(129, 199, 132, .2); }
+.wybor-zly { border-color: var(--bad); animation: drgnij .4s ease; }
+@keyframes drgnij { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+.sytuacja {
+  background: rgba(255, 255, 255, .06); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.sytuacja-naglowek {
+  margin: 0 0 6px; font-size: .74em; letter-spacing: .13em;
+  text-transform: uppercase; opacity: .7; font-weight: 700;
+}
+.sytuacja p:last-child { margin: 0; }
+
+/* ---------- postęp ---------- */
+.postep { display: flex; flex-direction: column; gap: 6px; }
+.postep-tekst { display: flex; justify-content: space-between; font-size: .82em; opacity: .85; }
+.postep-licz { font-weight: 700; color: var(--gold2); }
+.postep-tor { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .13); overflow: hidden; }
+.postep-fill { height: 100%; background: linear-gradient(90deg, var(--gold2), var(--gold)); transition: width .35s ease; }
+
+/* ---------- feedback ---------- */
+.feedback {
+  min-height: 0; border-radius: var(--radius); font-size: .92em;
+  padding: 0; border: 0;
+}
+.feedback:not(:empty) { padding: 12px 14px; border: 1px solid var(--line); }
+.feedback-dobrze { background: rgba(129, 199, 132, .16); border-color: rgba(129, 199, 132, .5); }
+.feedback-zle { background: rgba(255, 138, 128, .14); border-color: rgba(255, 138, 128, .5); }
+.feedback-info { background: rgba(255, 255, 255, .07); }
+.feedback-puls { animation: fbIn .3s ease both; }
+@keyframes fbIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- plansza z hotspotami ---------- */
+/* Kontener oblewa obraz co do piksela (inline-block + brak własnych rozmiarów),
+   dzięki czemu procentowe pozycje hotspotów zawsze pokrywają się z ilustracją,
+   także gdy o wysokości decyduje max-height na niższym ekranie. */
+.plansza {
+  position: relative; display: inline-block;
+  max-width: min(100%, 620px);
+  border-radius: 24px; overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+  flex: none; line-height: 0;
+}
+.plansza-img { max-width: 100%; max-height: 52svh; width: auto; height: auto; }
+.hotspot {
+  position: absolute; transform: translate(-50%, -50%);
+  aspect-ratio: 1; padding: 0; border: 0; background: transparent;
+  display: grid; place-items: center;
+}
+.hotspot-znak {
+  position: relative; font-family: 'Baloo 2', sans-serif; font-weight: 800;
+  font-size: clamp(18px, 4.4vw, 26px); color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, .8);
+}
+.hotspot-pierscien {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 3px solid rgba(255, 195, 0, .85);
+  background: radial-gradient(circle, rgba(255, 195, 0, .28), rgba(255, 195, 0, .04) 70%);
+  animation: hotPuls 2.2s ease-in-out infinite;
+}
+@keyframes hotPuls {
+  0%, 100% { transform: scale(.92); opacity: .75; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+.hotspot-etykieta {
+  position: absolute; bottom: -10px; left: 50%; transform: translate(-50%, 100%);
+  font-size: 12px; font-weight: 800; letter-spacing: .08em; line-height: 1.2;
+  font-family: 'Baloo 2', sans-serif;
+  background: rgba(8, 13, 32, .94); border: 1px solid var(--line);
+  border-radius: 999px; padding: 4px 11px; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+}
+/* dopóki punkt nie jest znaleziony, etykieta jest tylko dla czytników ekranu */
+.hotspot-etykieta-znak {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.hotspot:hover .hotspot-pierscien { border-color: #fff; }
+.hotspot-znaleziony { pointer-events: none; }
+.hotspot-znaleziony .hotspot-pierscien {
+  border-color: var(--good); animation: none;
+  background: radial-gradient(circle, rgba(129, 199, 132, .35), transparent 70%);
+}
+.hotspot-znaleziony .hotspot-etykieta { border-color: var(--good); color: var(--good); }
+.hotspot-znaleziony .hotspot-etykieta-znak {
+  position: absolute; width: auto; height: auto; overflow: visible; clip-path: none;
+}
+.hotspot-znaleziony .hotspot-znak { color: var(--good); }
+
+/* ---------- rozdział 2: panele rytmu ---------- */
+.panele {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+}
+@media (min-width: 520px) { .panele { grid-template-columns: repeat(3, 1fr); } }
+.panelik {
+  --blask: .3;
+  position: relative; border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .05);
+  padding: 16px 10px; min-height: 92px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  overflow: hidden;
+}
+.panelik::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 42%, rgba(120, 200, 255, .85), rgba(120, 200, 255, 0) 68%);
+  opacity: var(--blask);
+  transition: opacity .06s linear;
+}
+.panelik-kropka { position: relative; font-size: 22px; color: #cdeaff; }
+.panelik-nazwa { position: relative; font-size: .72em; letter-spacing: .1em; opacity: .85; }
+.panelik-stan { position: relative; font-weight: 800; color: var(--good); min-height: 1em; }
+.panelik-ok { border-color: var(--good); background: rgba(129, 199, 132, .18); }
+.panelik-ok::before { background: radial-gradient(circle at 50% 42%, rgba(129, 199, 132, .7), transparent 68%); }
+.panelik-zly { border-color: var(--bad); animation: drgnij .4s ease; }
+
+/* ---------- karty i strefy (rozdziały 4 i 5) ---------- */
+.karta {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .07));
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: var(--radius); padding: 16px;
+  touch-action: none; user-select: none; cursor: grab;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+}
+.karta-naglowek { margin: 0 0 6px; font-size: .7em; letter-spacing: .14em; opacity: .7; }
+.karta-tekst { margin: 0; font-weight: 700; font-size: 1.05em; }
+
+.ciagniety {
+  position: fixed !important; z-index: 60; pointer-events: none;
+  transform: rotate(-2deg) scale(1.03); cursor: grabbing;
+}
+
+.strefy { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media (min-width: 520px) { .strefy { grid-template-columns: repeat(3, 1fr); } }
+.strefa {
+  border: 2px dashed rgba(255, 255, 255, .28);
+  border-radius: var(--radius); padding: 14px 12px;
+  background: rgba(255, 255, 255, .04);
+  text-align: center; cursor: pointer;
+  transition: background .12s ease, border-color .12s ease, transform .12s ease;
+}
+.strefa:hover { background: rgba(255, 255, 255, .1); }
+.strefa-tytul { margin: 0 0 4px; font-family: 'Baloo 2', sans-serif; font-weight: 800; letter-spacing: .06em; }
+.strefa-opis { margin: 0; font-size: .82em; opacity: .78; }
+.strefa-cel { border-color: var(--gold); background: rgba(255, 195, 0, .16); transform: scale(1.02); }
+.strefa-ok { border-style: solid; border-color: var(--good); background: rgba(129, 199, 132, .18); }
+.strefa-zla { border-color: var(--bad); animation: drgnij .4s ease; }
+.strefa-zadanie, .strefa-tablica { text-align: left; padding: 18px 16px; }
+.tablica-lista { margin: 6px 0 0; font-family: 'Baloo 2', sans-serif; font-weight: 700; color: var(--gold2); }
+
+.bohaterowie, .kroki { display: flex; flex-wrap: wrap; gap: 10px; }
+.bohater, .krok {
+  flex: 1 1 auto; min-width: 130px; min-height: var(--btn-h);
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, .3);
+  background: rgba(255, 255, 255, .1); padding: 10px 18px;
+  font-family: 'Baloo 2', sans-serif; font-weight: 700;
+  touch-action: none; user-select: none;
+  transition: background .12s ease, transform .12s ease, border-color .12s ease;
+}
+.krok { border-radius: var(--radius); font-size: .92em; }
+.bohater:hover, .krok:hover { background: rgba(255, 255, 255, .18); transform: translateY(-2px); }
+.bohater-wybrany, .krok-wybrany { border-color: var(--gold); background: rgba(255, 195, 0, .22); }
+.bohater-zly, .krok-zly { border-color: var(--bad); animation: drgnij .4s ease; }
+.krok-ok { border-color: var(--good); background: rgba(129, 199, 132, .2); opacity: .65; pointer-events: none; }
+
+/* ---------- lista rozdziałów ---------- */
+.lista-rozdzialow { display: flex; flex-direction: column; gap: 10px; }
+.rozdzial {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  border: 1px solid var(--line); background: rgba(255, 255, 255, .07);
+  border-radius: var(--radius); padding: 14px 16px; min-height: var(--btn-h);
+  transition: background .12s ease, transform .12s ease;
+}
+.rozdzial:hover:not(:disabled) { background: rgba(255, 255, 255, .13); transform: translateY(-1px); }
+.rozdzial-nr {
+  width: 38px; height: 38px; flex: none; border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, var(--gold2), var(--gold)); color: #4a2f00;
+  font-family: 'Baloo 2', sans-serif; font-weight: 800;
+}
+.rozdzial-tytul { flex: 1; font-family: 'Baloo 2', sans-serif; font-weight: 700; }
+.rozdzial-stan { color: var(--good); font-weight: 800; }
+.rozdzial-zamkniety { opacity: .45; cursor: not-allowed; }
+.rozdzial-zamkniety .rozdzial-nr { background: rgba(255, 255, 255, .18); color: var(--ink); }
+
+/* ---------- tryby wiekowe ---------- */
+.tryb {
+  border: 1px solid var(--line); background: rgba(255, 255, 255, .06);
+  border-radius: var(--radius); padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.tryb-opis { margin: 0; opacity: .85; font-size: .92em; }
+
+/* ---------- wniosek i osiągnięcie ---------- */
+.wniosek {
+  border-left: 4px solid var(--good); background: rgba(129, 199, 132, .12);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.wniosek-naglowek { margin: 0 0 6px; font-size: .72em; letter-spacing: .14em; opacity: .8; font-weight: 700; }
+.wniosek-tekst { margin: 0; }
+.osiagniecie {
+  margin: 0; text-align: center; font-family: 'Baloo 2', sans-serif;
+  font-weight: 800; color: var(--gold2);
+}
+
+/* ---------- nakładka pauzy ---------- */
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(6, 10, 26, .78);
+  display: grid; place-items: center; padding: 20px;
+}
+
+/* ---------- stopka ---------- */
+.foot { margin-top: auto; padding-top: 18px; opacity: .6; font-size: .8em; text-align: center; }
+.foot a { text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+/* ---------- konfetti ---------- */
+.konfetti { position: fixed; inset: 0; z-index: 55; pointer-events: none; overflow: hidden; }
+.konfetti i {
+  position: absolute; top: -14px; width: 9px; height: 14px; border-radius: 2px;
+  animation: spada 2s ease-in forwards;
+}
+@keyframes spada {
+  to { transform: translateY(105svh) rotate(560deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before { animation: none !important; transition: none !important; }
+  .panelik::before { transition: opacity .06s linear !important; }
+}
