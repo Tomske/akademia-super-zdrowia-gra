@@ -1,15 +1,16 @@
-/* Pięć rozdziałów. Każdy: dialog -> zadanie -> wniosek.
-   Odwzorowanie Chapter01Flow..Chapter05Flow z oryginału. */
+/* Pięć rozdziałów kampanii na wspólnym silniku minigier (minigry.js).
+   Rozdział = dialog -> zadanie -> wniosek. Do tego: rama z Glutonem X, moc bohatera,
+   karty do albumu, ekran "Pokaż rodzicowi" i misja na dziś. */
 window.ASZD = window.ASZD || {};
 
 ASZD.rozdzialy = (function () {
   const ui = ASZD.ui;
   const T = ASZD.T;
+  const M = ASZD.minigry;
 
-  /* Sesja rozdziału: liczy pomyłki, z nich biorą się gwiazdki. Bez tego nic nie kosztowało
-     i całą grę dało się przejść klikając wszystko po kolei. */
+  /* ---------- sesja rozdziału: pomyłki, gwiazdki, moc ---------- */
   let sesja = null;
-  function nowaSesja() { sesja = { bledy: 0, widget: null }; }
+  function nowaSesja(nr) { sesja = { nr, bledy: 0, widget: null, mocUzyta: false, gra: null }; }
   function blad() {
     ASZD.save.dodajPomylke();
     if (!sesja) return;
@@ -21,35 +22,53 @@ ASZD.rozdzialy = (function () {
     if (sesja) { sesja.widget = w; w.aktualizuj(ASZD.save.gwiazdkiZa(sesja.bledy)); }
     return w;
   }
-
-  function tasuj(a) {
-    const t = a.slice();
-    for (let i = t.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [t[i], t[j]] = [t[j], t[i]];
-    }
-    return t;
+  function moc() {
+    const b = ASZD.BOHATEROWIE_LISTA.find((x) => x.id === ASZD.save.bohater());
+    if (!b) return null;
+    return {
+      nazwa: b.moc,
+      opis: b.opis,
+      dostepna: () => !!sesja && sesja.bledy > 0 && !sesja.mocUzyta,
+      uzyj: () => { sesja.mocUzyta = true; }
+    };
+  }
+  function cb(extra) {
+    return Object.assign({
+      blad,
+      dobrze: () => {},
+      karta: (id) => ASZD.album.odblokuj(id),
+      licznik: licznikGwiazdek,
+      koniec: () => {}
+    }, extra || {});
   }
 
-  /* ---------- wspólna powłoka rozdziału ---------- */
-
+  /* ---------- wspólna powłoka ---------- */
   function ekran(nr, obraz, buduj) {
+    if (sesja && sesja.gra) { sesja.gra.stop(); sesja.gra = null; }
+    ASZD.lektor.stop();
     const rozdzial = ASZD.ROZDZIALY[nr - 1];
     ui.ustawTlo(obraz || rozdzial.obraz);
     const s = ui.wyczysc();
     s.appendChild(ui.naglowekGry(nr, rozdzial.tytul, () => ASZD.main.pauza(nr)));
     const box = ui.el('div', 'panel');
     s.appendChild(box);
-    buduj(box);
+    if (buduj) buduj(box);
     return box;
+  }
+
+  function zadanie(nr, obraz, typ, cfg, onKoniec, extra) {
+    const panel = ekran(nr, obraz);
+    cfg.moc = moc();
+    sesja.gra = M[typ]({ panel, root: ui.scena() }, cfg, cb(Object.assign({ koniec: onKoniec }, extra || {})));
+    ASZD.lektor.czytajPanel(panel);
+    return panel;
   }
 
   function dialog(nr, onDone) {
     const linie = ASZD.DIALOGI[nr][ASZD.save.tryb()];
     let i = 0;
-
     function pokaz() {
-      const box = ekran(nr, null, (b) => {
+      ekran(nr, null, (b) => {
         b.appendChild(ui.el('p', 'etykieta', T.scenaZ(i + 1, linie.length)));
         b.appendChild(ui.kartaDialogu(linie[i][0], linie[i][1]));
         const ostatnia = i === linie.length - 1;
@@ -57,567 +76,236 @@ ASZD.rozdzialy = (function () {
           i++;
           if (i < linie.length) pokaz(); else onDone();
         }));
+        ASZD.lektor.czytaj(linie[i][0] + '. ' + linie[i][1]);
       });
-      return box;
     }
     pokaz();
+  }
+
+  /* karta z Glutonem X: rama fabularna, przed rozdziałem 1 i po rozdziale 3 */
+  function kartaGlutona(nr, obraz, etykieta, tytul, tekst, przycisk, onNext) {
+    ekran(nr, obraz, (b) => {
+      b.appendChild(ui.el('p', 'etykieta', etykieta));
+      b.appendChild(ui.el('h2', null, tytul));
+      const g = ui.el('div', 'gluton');
+      const img = ui.el('img', 'gluton-img');
+      img.src = 'assets/img/gluton.webp'; img.alt = ASZD.GLUTON.imie;
+      g.appendChild(img);
+      const t = ui.el('div', 'gluton-tresc');
+      t.appendChild(ui.el('p', 'gluton-imie', ASZD.GLUTON.tytulKarty + ': ' + ASZD.GLUTON.imie));
+      t.appendChild(ui.el('p', 'opis', tekst));
+      g.appendChild(t);
+      b.appendChild(g);
+      b.appendChild(ui.przycisk(przycisk, onNext));
+      ASZD.lektor.czytaj(tekst);
+    });
   }
 
   function zakoncz(nr, wniosek, onNext) {
     const osiagniecie = ASZD.OSIAGNIECIA['r' + nr];
     const bledy = sesja ? sesja.bledy : 0;
     const gwiazdek = ASZD.save.gwiazdkiZa(bledy);
-    const poprzednio = ASZD.save.gwiazdkiRozdzialu(nr);
     ASZD.save.ukonczRozdzial(nr, osiagniecie);
-    ASZD.save.zapiszGwiazdki(nr, gwiazdek);
+    const xp = ASZD.save.zapiszGwiazdki(nr, gwiazdek);
+    if (gwiazdek === 3) ASZD.album.zloc(nr);
     ASZD.audio.rozdzial(gwiazdek);
     if (gwiazdek === 3) ui.konfetti();
+    wynik(nr, wniosek, onNext, { bledy, gwiazdek, xp, osiagniecie });
+  }
+
+  function wynik(nr, wniosek, onNext, w) {
     ekran(nr, null, (b) => {
       b.appendChild(ui.el('p', 'etykieta', T.ukonczony));
-      b.appendChild(ui.el('h2', null, T.wynik));
-      b.appendChild(ui.gwiazdkiDuze(gwiazdek));
-      b.appendChild(ui.el('p', 'ocena', bledy === 0 ? T.bezBledu
-        : (bledy === 1 ? T.jednaPomylka : T.wielePomylek)));
-      const w = ui.el('div', 'wniosek');
-      w.appendChild(ui.el('p', 'wniosek-naglowek', T.wniosek));
+      b.appendChild(ui.el('h2', null, ASZD.ROZDZIALY[nr - 1].tytul));
+      b.appendChild(ui.gwiazdkiDuze(w.gwiazdek));
+      b.appendChild(ui.el('p', 'ocena', w.bledy === 0 ? T.bezBledu : (w.bledy === 1 ? T.jednaPomylka : T.wielePomylek)));
+      if (w.xp > 0) b.appendChild(ui.el('p', 'xp-info', T.xpZdobyte(w.xp)));
+      const box = ui.el('div', 'wniosek');
+      box.appendChild(ui.el('p', 'wniosek-naglowek', T.wniosek));
       const p = ui.el('p', 'wniosek-tekst');
       ui.wieloliniowy(p, wniosek);
-      w.appendChild(p);
-      b.appendChild(w);
-      b.appendChild(ui.el('p', 'osiagniecie', T.osiagniecie + osiagniecie));
-      b.appendChild(ui.przycisk(nr < 5 ? T.nastepny : T.zakonczenie, onNext));
-      if (gwiazdek < 3) {
-        b.appendChild(ui.przycisk(T.jeszczeRaz, () => ASZD.main.graj(nr), 'btn-ghost'));
-      }
+      box.appendChild(p);
+      b.appendChild(box);
+      b.appendChild(ui.el('p', 'osiagniecie', T.osiagniecie + w.osiagniecie));
+
+      b.appendChild(ui.przycisk(nr < 5 ? T.nastepny : T.zakonczenie, () => misjaPotem(onNext)));
+      b.appendChild(ui.przycisk(T.pokazRodzicowi, () => rodzic(nr, () => wynik(nr, wniosek, onNext, w)), 'btn-ghost'));
+      if (w.gwiazdek < 3) b.appendChild(ui.przycisk(T.jeszczeRaz, () => ASZD.main.graj(nr), 'btn-ghost'));
       b.appendChild(ui.przycisk(T.wyborRozdzialu, () => ASZD.main.pokazRozdzialy(), 'btn-ghost'));
+      ASZD.lektor.czytaj(wniosek);
     });
   }
 
-  /* ---------- rozdział 1: rozejrzyj się przed działaniem ---------- */
+  /* jeśli nie ma aktywnej misji na dziś, proponujemy jedną po rozdziale */
+  function misjaPotem(onNext) {
+    const st = ASZD.save.get();
+    if (st.misja && st.misja.stan === 'trwa') { onNext(); return; }
+    const pula = ASZD.MISJE.filter((m) => st.misjeZrobione.indexOf(m.id) === -1);
+    if (!pula.length) { onNext(); return; }
+    const m = pula[Math.floor(Math.random() * pula.length)];
+    ASZD.save.ustawMisje(m.id);
+    ASZD.main.ekranMisji(m, onNext);
+  }
 
+  /* Pokaż rodzicowi: dziecko MÓWI trzy zdania, rodzic zadaje pytanie */
+  function rodzic(nr, onBack) {
+    const R = ASZD.RODZIC[nr];
+    ekran(nr, null, (b) => {
+      b.appendChild(ui.el('p', 'etykieta', T.pokazRodzicowi));
+      b.appendChild(ui.el('h2', null, T.powiedzRodzicowi));
+      const lista = ui.el('ol', 'rodzic-lista');
+      R.powiedz.forEach((z) => lista.appendChild(ui.el('li', null, z)));
+      b.appendChild(lista);
+      const box = ui.el('div', 'sytuacja');
+      box.appendChild(ui.el('p', 'sytuacja-naglowek', T.pytanieDlaRodzica));
+      box.appendChild(ui.el('p', null, R.pytanie));
+      b.appendChild(box);
+      b.appendChild(ui.przycisk(T.wrocDoWyniku, onBack));
+    });
+  }
+
+  /* ---------- rozdział 1 ---------- */
   function rozdzial1(onNext) {
-    nowaSesja();
+    nowaSesja(1);
     const D = ASZD.R1;
     const potrzeba = D.potrzeba[ASZD.save.tryb()];
-    const znalezione = [];
     ASZD.save.dodajMax(potrzeba);
+    const KARTY = { senek: 'cichy-sygnal', water: 'woda-najpierw', panel: 'fakt-panel' };
 
-    dialog(1, minigra);
+    kartaGlutona(1, 'r1-scena', T.marka, T.coSieDzieje, ASZD.GLUTON.intro, T.dalej, () => dialog(1, minigra));
 
     function minigra() {
-      let post, fb;
-      ekran(1, 'r1-scena', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', D.etykieta));
-        b.appendChild(ui.el('h2', null, D.tytul));
-        b.appendChild(ui.el('p', 'opis', D.opis[ASZD.save.tryb()]));
-      });
-      const plansza = ui.planszaHotspotow('r1-scena', D.punkty, (p, node) => {
-        if (znalezione.indexOf(p.id) !== -1) { fb.pokaz('info', D.powtorka); return; }
-        if (!p.dobry) {
-          ASZD.audio.zle(); blad();
-          fb.pokaz('zle', p.tekst);
-          return;
-        }
-        znalezione.push(p.id);
-        node.classList.add('hotspot-znaleziony');
-        node.dataset.zablokowany = '1';
-        node.querySelector('.hotspot-etykieta').textContent = node._nazwa;
-        const znak = node.querySelector('.hotspot-znak');
-        if (znak) znak.textContent = '✓';
-        ASZD.audio.dobrze(znalezione.length);
-        ASZD.save.dodajObserwacje(1);
-        post.aktualizuj(znalezione.length);
-        fb.pokaz('dobrze', p.tekst);
-        if (znalezione.length >= potrzeba) setTimeout(decyzja, 1400);
-      });
-      ui.scena().appendChild(plansza);
-      const pod = ui.panelPod();
-      post = ui.postep(D.licznik, znalezione.length, potrzeba);
-      fb = ui.feedback();
-      const pasek = ui.el('div', 'pasek-zadania');
-      pasek.appendChild(post);
-      pasek.appendChild(licznikGwiazdek());
-      pod.appendChild(pasek);
-      pod.appendChild(fb);
+      zadanie(1, 'r1-scena', 'hotspoty', {
+        etykieta: D.etykieta, tytul: D.tytul, opis: D.opis[ASZD.save.tryb()],
+        obraz: 'r1-scena', potrzeba, licznik: D.licznik, powtorka: D.powtorka,
+        punkty: D.punkty.map((p) => Object.assign({}, p, { karta: KARTY[p.id] }))
+      }, decyzja, { dobrze: () => ASZD.save.dodajObserwacje(1) });
     }
-
     function decyzja() {
       const S = D.decyzja;
-      ekran(1, 'r1-decyzja', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', S.etykieta));
-        b.appendChild(ui.el('h2', null, S.tytul));
-        b.appendChild(ui.el('p', 'licznik-ok', S.licznik + ': ' + znalezione.length + '/' + potrzeba));
-        const box = ui.el('div', 'sytuacja');
-        box.appendChild(ui.el('p', 'sytuacja-naglowek', S.naglowek));
-        box.appendChild(ui.el('p', null, S.tresc));
-        b.appendChild(box);
-        const fb = ui.feedback();
-        b.appendChild(fb);
-        b.appendChild(ui.siatkaWyborow(S.opcje, (o, node) => {
-          if (!o.dobry) {
-            ASZD.audio.zle(); blad();
-            node.classList.add('wybor-zly');
-            fb.pokaz('zle', S.zle);
-            return;
-          }
-          node.classList.add('wybor-dobry');
-          zakoncz(1, S.wniosek, onNext);
-        }));
-      });
+      zadanie(1, 'r1-decyzja', 'wybor', {
+        etykieta: S.etykieta, tytul: S.tytul,
+        sytuacja: { naglowek: S.naglowek, tresc: S.tresc },
+        opcje: S.opcje, zle: S.zle, karta: 'zatrzymaj-powiedz'
+      }, () => zakoncz(1, S.wniosek, onNext));
     }
   }
 
-  /* ---------- rozdział 2: znajdź powtarzający się rytm ---------- */
-
+  /* ---------- rozdział 2 ---------- */
   function rozdzial2(onNext) {
-    nowaSesja();
+    nowaSesja(2);
     const D = ASZD.R2;
     const tryb = ASZD.save.tryb();
-    const ile = D.paneli[tryb];
-    const rytmicznych = D.rytmicznych[tryb];
-    let raf = null;
-
-    dialog(2, minigra);
-
-    function minigra() {
-      const rytmiczne = tasuj(Array.from({ length: ile }, (_, i) => i)).slice(0, rytmicznych);
-      const znalezione = [];
-      ASZD.save.dodajMax(rytmicznych);
-
-      ekran(2, 'r2-minigra', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', D.etykieta));
-        b.appendChild(ui.el('h2', null, D.tytul));
-        b.appendChild(ui.el('p', 'opis', D.opis[tryb]));
-        const post = ui.postep(D.licznik, 0, rytmicznych);
-        const pasek = ui.el('div', 'pasek-zadania');
-        pasek.appendChild(post);
-        pasek.appendChild(licznikGwiazdek());
-        b.appendChild(pasek);
-        const status = ui.el('p', 'status', D.status.obserwuj);
-        b.appendChild(status);
-        /* Bez tej pauzy dziecko klikało wszystkie panele po kolei i wygrywało bez patrzenia.
-           Teraz pierwsze sekundy służą wyłącznie obserwacji. */
-        let gotowe = false;
-        const zegar = ui.odliczanie(ASZD.save.maly() ? 3 : 5, () => {
-          gotowe = true;
-          status.textContent = T.terazWybierz;
-          siatka.classList.add('panele-aktywne');
-        });
-        b.appendChild(zegar);
-
-        const siatka = ui.el('div', 'panele czekaja');
-        const panele = [];
-        for (let i = 0; i < ile; i++) {
-          const rytm = rytmiczne.indexOf(i) !== -1;
-          const p = ui.el('button', 'panelik');
-          p.appendChild(ui.el('span', 'panelik-kropka', '●'));
-          p.appendChild(ui.el('span', 'panelik-nazwa', 'PANEL ' + (i + 1)));
-          const stan = ui.el('span', 'panelik-stan', '');
-          p.appendChild(stan);
-          const dane = {
-            el: p, stan, rytm, i,
-            okres: rytm ? 1500 : (900 + Math.random() * 1800),
-            faza: rytm ? (i * 220) : Math.random() * 3000,
-            nastepny: 0
-          };
-          p.addEventListener('click', () => kliknij(dane));
-          panele.push(dane);
-          siatka.appendChild(p);
-        }
-        b.appendChild(siatka);
-
-        const fb = ui.feedback();
-        b.appendChild(fb);
-
-        const potwierdz = ui.przycisk(D.status.potwierdz, () => {
-          stopAnim();
-          zakoncz(2, D.wniosek, onNext);
-        });
-        potwierdz.disabled = true;
-        potwierdz.classList.add('btn-nieaktywny');
-        b.appendChild(potwierdz);
-
-        function kliknij(d) {
-          if (!gotowe) { ASZD.audio.wskazowka(); fb.pokaz('info', D.opis[tryb]); return; }
-          if (d.el.dataset.zablokowany === '1') { fb.pokaz('info', D.powtorka); return; }
-          if (!d.rytm) {
-            ASZD.audio.zle(); blad();
-            d.el.classList.add('panelik-zly');
-            setTimeout(() => d.el.classList.remove('panelik-zly'), 600);
-            fb.pokaz('zle', D.zly);
-            return;
-          }
-          d.el.dataset.zablokowany = '1';
-          d.el.classList.add('panelik-ok');
-          d.stan.textContent = '✓';
-          znalezione.push(d.i);
-          ASZD.audio.cichy();
-          ASZD.save.dodajObserwacje(1);
-          post.aktualizuj(znalezione.length);
-          if (znalezione.length >= rytmicznych) {
-            status.textContent = D.status.zapisany;
-            fb.pokaz('dobrze', D.komplet);
-            potwierdz.disabled = false;
-            potwierdz.classList.remove('btn-nieaktywny');
-          } else {
-            fb.pokaz('dobrze', D.dobry);
-          }
-        }
-
-        /* animacja pulsowania: rytmiczne mają stały okres, reszta nieregularny */
-        const start = performance.now();
-        function klatka(t) {
-          const czas = t - start;
-          panele.forEach((d) => {
-            if (d.el.dataset.zablokowany === '1') { d.el.style.setProperty('--blask', 1); return; }
-            const faza = ((czas + d.faza) % d.okres) / d.okres;
-            let jasnosc;
-            if (d.rytm) {
-              jasnosc = 0.25 + 0.75 * Math.pow(Math.sin(faza * Math.PI), 3);
-            } else {
-              jasnosc = faza < 0.08 ? 1 : 0.18;
-              if (faza > 0.98) { d.okres = 700 + Math.random() * 2200; }
-            }
-            d.el.style.setProperty('--blask', jasnosc.toFixed(3));
-          });
-          raf = requestAnimationFrame(klatka);
-        }
-        stopAnim();
-        raf = requestAnimationFrame(klatka);
-      });
-    }
-
-    function stopAnim() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+    ASZD.save.dodajMax(D.rytmicznych[tryb]);
+    dialog(2, () => {
+      zadanie(2, 'r2-minigra', 'rytm', {
+        etykieta: D.etykieta, tytul: D.tytul, opis: D.opis[tryb], opisObserwacji: D.opis[tryb],
+        ile: D.paneli[tryb], rytmicznych: D.rytmicznych[tryb], obserwacja: ASZD.save.maly() ? 3 : 5,
+        dystraktor: 'skok', licznik: D.licznik, status: D.status, powtorka: D.powtorka,
+        dobry: D.dobry, zly: D.zly, komplet: D.komplet, karta: 'rytm'
+      }, () => { ASZD.album.odblokuj('ciche-potrzeby'); zakoncz(2, D.wniosek, onNext); },
+      { dobrze: () => ASZD.save.dodajObserwacje(1) });
+    });
   }
 
-  /* ---------- rozdział 3: co sprawdzić najpierw ---------- */
-
+  /* ---------- rozdział 3 ---------- */
   function rozdzial3(onNext) {
-    nowaSesja();
+    nowaSesja(3);
     const D = ASZD.R3;
     const kolejnosc = [];
-
     dialog(3, plansza);
 
     function plansza() {
-      ekran(3, 'r3-scena', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', D.etykieta));
-        b.appendChild(ui.el('h2', null, D.tytul));
-        const box = ui.el('div', 'sytuacja');
-        box.appendChild(ui.el('p', 'sytuacja-naglowek', D.naglowek));
-        box.appendChild(ui.el('p', null, D.tresc));
-        b.appendChild(box);
-      });
       const wolne = D.alarmy.filter((a) => kolejnosc.indexOf(a.id) === -1);
-      const p = ui.planszaHotspotow('r3-scena', wolne, (alarm) => {
-        if (!kolejnosc.length) ASZD.save.set({ pierwszyAlarm: alarm.id });
-        kolejnosc.push(alarm.id);
-        if (alarm.id === 'loud') ASZD.audio.glosny(); else ASZD.audio.cichy();
-        weryfikacja(alarm.id);
-      }, true);
-      ui.scena().appendChild(p);
-      const pod = ui.panelPod();
-      const pasek = ui.el('div', 'pasek-zadania');
-      pasek.appendChild(ui.postep(D.licznik, kolejnosc.length, 2));
-      pasek.appendChild(licznikGwiazdek());
-      pod.appendChild(pasek);
-      pod.appendChild(ui.el('p', 'opis', kolejnosc.length ? D.drugi(kolejnosc[0]) : D.podpowiedz));
+      zadanie(3, 'r3-scena', 'hotspoty', {
+        etykieta: D.etykieta, tytul: D.tytul,
+        sytuacja: { naglowek: D.naglowek, tresc: D.tresc + ' ' + ASZD.GLUTON.rozdzial3 },
+        opis: kolejnosc.length ? D.drugi(kolejnosc[0]) : D.podpowiedz,
+        obraz: 'r3-scena', potrzeba: 1, licznik: D.licznik, powtorka: '', pokazEtykiety: true,
+        punkty: wolne.map((a) => Object.assign({}, a, { dobry: true, tekst: a.po }))
+      }, (dane) => {
+        const id = dane.znalezione[0];
+        if (!kolejnosc.length) ASZD.save.set({ pierwszyAlarm: id });
+        kolejnosc.push(id);
+        if (id === 'loud') ASZD.audio.glosny(); else ASZD.audio.cichy();
+        weryfikacja(id);
+      });
     }
-
     function weryfikacja(id) {
       const W = D.weryfikacja[id];
-      ekran(3, W.obraz, (b) => {
-        b.appendChild(ui.el('p', 'etykieta', D.weryfikacja.etykieta));
-        b.appendChild(ui.el('h2', null, W.tytul));
-        b.appendChild(ui.kartaDialogu(W.mowca, W.tresc));
-        const fb = ui.feedback();
-        b.appendChild(fb);
-        b.appendChild(ui.siatkaWyborow(W.opcje, (o, node) => {
-          if (!o.dobry) {
-            ASZD.audio.zle(); blad();
-            node.classList.add('wybor-zly');
-            fb.pokaz('zle', W.zle);
-            return;
-          }
-          node.classList.add('wybor-dobry');
-          ASZD.audio.dobrze(kolejnosc.length);
-          fb.pokaz('dobrze', W.dobrze);
-          setTimeout(() => {
-            if (kolejnosc.length < 2) plansza(); else podsumowanie();
-          }, 1200);
-        }));
-      });
+      zadanie(3, W.obraz, 'wybor', {
+        etykieta: D.weryfikacja.etykieta, tytul: W.tytul, dialog: [W.mowca, W.tresc],
+        opcje: W.opcje, zle: W.zle, dobrze: W.dobrze,
+        karta: id === 'quiet' ? 'zmierz-zanim' : 'ludzie-najpierw'
+      }, () => { if (kolejnosc.length < 2) plansza(); else podsumowanie(); });
     }
-
     function podsumowanie() {
       const S = D.podsumowanie;
       const wariant = kolejnosc[0] === 'quiet' ? S.quiet : S.loud;
-      ekran(3, 'r3-koniec', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', S.etykieta));
-        b.appendChild(ui.el('h2', null, S.tytul));
-        b.appendChild(ui.kartaDialogu(S.mowca, wariant.tresc));
-        b.appendChild(ui.przycisk(S.przycisk, () => {
-          zakoncz(3, wariant.wynik + S.sufiks, onNext);
-        }));
+      kartaGlutona(3, 'r3-koniec', S.etykieta, S.tytul, ASZD.GLUTON.demaskacja + ' ' + wariant.tresc, S.przycisk, () => {
+        ASZD.album.odblokuj('kolejnosc-laczy');
+        zakoncz(3, wariant.wynik + S.sufiks, onNext);
       });
     }
   }
 
-  /* ---------- rozdział 4: fakt, hipoteza, domysł ---------- */
-
+  /* ---------- rozdział 4 ---------- */
   function rozdzial4(onNext) {
-    nowaSesja();
+    nowaSesja(4);
     const D = ASZD.R4;
     const maly = ASZD.save.maly();
-    /* w trybie 4-7 mniej kart, ale zawsze po jednej z każdej kategorii */
     const pula = maly
-      ? tasuj([D.karty[0], D.karty[2], D.karty[4], tasuj(D.karty.slice(1))[0]]).slice(0, D.kartMaly)
-      : tasuj(D.karty);
-    const wynik = { fakt: 0, hipoteza: 0, domysl: 0 };
-    let i = 0;
-
-    dialog(4, minigra);
-
-    function minigra() {
-      if (i >= pula.length) { review(); return; }
-      const karta = pula[i];
-
-      ekran(4, 'r4-minigra', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', D.etykieta));
-        b.appendChild(ui.el('h2', null, D.tytul));
-        b.appendChild(ui.el('p', 'opis', D.instrukcja(i + 1, pula.length)));
-        const post = ui.postep(D.licznik, i, pula.length);
-        const pasek = ui.el('div', 'pasek-zadania');
-        pasek.appendChild(post);
-        pasek.appendChild(licznikGwiazdek());
-        b.appendChild(pasek);
-
-        const token = ui.el('div', 'karta');
-        token.appendChild(ui.el('p', 'karta-naglowek', D.naglowekKarty));
-        token.appendChild(ui.el('p', 'karta-tekst', karta.tekst));
-        b.appendChild(token);
-
-        const strefyEl = ui.el('div', 'strefy');
-        const strefy = D.kategorie.map((k) => {
-          const z = ui.el('div', 'strefa');
-          z.appendChild(ui.el('p', 'strefa-tytul', k.tytul));
-          z.appendChild(ui.el('p', 'strefa-opis', k.opis));
-          strefyEl.appendChild(z);
-          return { el: z, id: k.id, echo: k.echo };
-        });
-        b.appendChild(strefyEl);
-
-        const fb = ui.feedback();
-        b.appendChild(fb);
-
-        function upusc(strefa) {
-          if (strefa.id !== karta.kat) {
-            ASZD.audio.zle(); blad();
-            strefa.el.classList.add('strefa-zla');
-            setTimeout(() => strefa.el.classList.remove('strefa-zla'), 600);
-            fb.pokaz('zle', D.zle);
-            return;
-          }
-          token.dataset.zablokowany = '1';
-          strefa.el.classList.add('strefa-ok');
-          wynik[strefa.id]++;
-          i++;
-          ASZD.audio.dobrze(i);
-          post.aktualizuj(i);
-          fb.pokaz('dobrze', strefa.echo);
-          setTimeout(minigra, 1100);
-        }
-
-        ASZD.dnd.ustaw(token, strefy, (s) => upusc(s));
-        ASZD.dnd.strefyKlikalne(strefy, () => token, (s) => upusc(s));
-      });
-    }
-
-    function review() {
+      ? M.tasuj([D.karty[0], D.karty[2], D.karty[4], M.tasuj(D.karty.slice(1))[0]]).slice(0, D.kartMaly)
+      : D.karty;
+    dialog(4, () => {
+      zadanie(4, 'r4-minigra', 'karty', {
+        etykieta: D.etykieta, tytul: D.tytul, instrukcja: D.instrukcja, naglowekKarty: D.naglowekKarty,
+        licznik: D.licznik, zle: D.zle, kategorie: D.kategorie,
+        karty: pula.map((k) => Object.assign({}, k, { karta: k.kat }))
+      }, (dane) => review(dane.wynik));
+    });
+    function review(w) {
       const R = D.review;
+      ASZD.album.odblokuj('nie-wiemy-jeszcze');
       ekran(4, 'r4-review', (b) => {
         b.appendChild(ui.el('p', 'etykieta', R.etykieta));
         b.appendChild(ui.el('h2', null, R.tytul));
         const box = ui.el('div', 'sytuacja');
-        ui.wieloliniowy(box, R.tresc(wynik.fakt, wynik.hipoteza, wynik.domysl));
+        ui.wieloliniowy(box, R.tresc(w.fakt, w.hipoteza, w.domysl));
         b.appendChild(box);
         b.appendChild(ui.przycisk(R.przycisk, () => zakoncz(4, R.wniosek, onNext)));
       });
     }
   }
 
-  /* ---------- rozdział 5: role, plan i kolejność ---------- */
-
+  /* ---------- rozdział 5 ---------- */
   function rozdzial5(onNext) {
-    nowaSesja();
+    nowaSesja(5);
     const D = ASZD.R5;
-    let z = 0;
-
     dialog(5, zadania);
 
     function zadania() {
-      if (z >= D.zadania.length) { wyborPlanu(); return; }
-      const zad = D.zadania[z];
-      const ilu = ASZD.save.maly() ? 2 : 3;
-      const inni = tasuj(D.dystraktory).slice(0, ilu - 1);
-      const bohaterowie = tasuj([zad.bohater].concat(inni));
-
-      ekran(5, 'r5-zadania', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', D.etykieta));
-        b.appendChild(ui.el('h2', null, D.tytul));
-        b.appendChild(ui.el('p', 'opis', D.instrukcja));
-        const post = ui.postep(D.licznik, z, D.zadania.length);
-        const pasek = ui.el('div', 'pasek-zadania');
-        pasek.appendChild(post);
-        pasek.appendChild(licznikGwiazdek());
-        b.appendChild(pasek);
-
-        const strefa = ui.el('div', 'strefa strefa-zadanie');
-        strefa.appendChild(ui.el('p', 'strefa-tytul', D.krok(z + 1)));
-        strefa.appendChild(ui.el('p', 'strefa-opis', zad.tekst));
-        b.appendChild(strefa);
-        const strefy = [{ el: strefa, id: zad.id }];
-
-        const rzad = ui.el('div', 'bohaterowie');
-        let wybrany = null;
-        const tokeny = bohaterowie.map((imie) => {
-          const t = ui.el('button', 'bohater');
-          t.appendChild(ui.el('span', 'bohater-imie', imie));
-          t.addEventListener('click', () => {
-            if (t.dataset.zablokowany === '1') return;
-            ASZD.audio.dotyk();
-            tokeny.forEach((x) => x.classList.remove('bohater-wybrany'));
-            t.classList.add('bohater-wybrany');
-            wybrany = t;
-          });
-          t.dataset.imie = imie;
-          rzad.appendChild(t);
-          return t;
-        });
-        b.appendChild(rzad);
-
-        const fb = ui.feedback();
-        b.appendChild(fb);
-
-        function upusc(_, token) {
-          const imie = token.dataset.imie;
-          if (imie !== zad.bohater) {
-            ASZD.audio.zle(); blad();
-            token.classList.add('bohater-zly');
-            setTimeout(() => token.classList.remove('bohater-zly'), 600);
-            fb.pokaz('zle', D.zle(imie));
-            return;
-          }
-          token.dataset.zablokowany = '1';
-          strefa.classList.add('strefa-ok');
-          z++;
-          ASZD.audio.dobrze(z);
-          post.aktualizuj(z);
-          fb.pokaz('dobrze', D.dobrze(imie));
-          setTimeout(zadania, 1200);
-        }
-
-        tokeny.forEach((t) => ASZD.dnd.ustaw(t, strefy, upusc));
-        ASZD.dnd.strefyKlikalne(strefy, () => wybrany, upusc);
-      });
+      zadanie(5, 'r5-zadania', 'role', {
+        etykieta: D.etykieta, tytul: D.tytul, instrukcja: D.instrukcja, licznik: D.licznik,
+        ilu: ASZD.save.maly() ? 2 : 3, krok: D.krok, zadania: D.zadania, dystraktory: D.dystraktory,
+        dobrze: D.dobrze, zle: D.zle
+      }, () => { ASZD.album.odblokuj('moc-do-zadania'); wyborPlanu(); });
     }
-
     function wyborPlanu() {
       const P = D.plan;
-      ekran(5, 'r5-plan', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', P.etykieta));
-        b.appendChild(ui.kartaDialogu(P.mowca, P.tresc));
-        const fb = ui.feedback();
-        b.appendChild(fb);
-        b.appendChild(ui.siatkaWyborow(P.opcje, (o, node) => {
-          if (!o.dobry) {
-            ASZD.audio.zle(); blad();
-            node.classList.add('wybor-zly');
-            fb.pokaz('zle', P.odpowiedzi[o.id]);
-            return;
-          }
-          node.classList.add('wybor-dobry');
-          fb.pokaz('dobrze', P.odpowiedzi[o.id]);
-          setTimeout(kolejnosc, 1300);
-        }));
-      });
+      zadanie(5, 'r5-plan', 'wybor', {
+        etykieta: P.etykieta, dialog: [P.mowca, P.tresc],
+        opcje: P.opcje, zle: P.odpowiedzi, dobrze: { wspolny: P.odpowiedzi.wspolny }, karta: 'zabezpiecz-sprawdz'
+      }, kolejnosc);
     }
-
     function kolejnosc() {
       const K = D.kolejnosc;
-      const ulozone = [];
-
-      ekran(5, 'r5-kolejnosc', (b) => {
-        b.appendChild(ui.el('p', 'etykieta', K.etykieta));
-        b.appendChild(ui.el('h2', null, K.tytul));
-        const post = ui.postep(K.licznik, 0, K.kroki.length);
-        const pasek = ui.el('div', 'pasek-zadania');
-        pasek.appendChild(post);
-        pasek.appendChild(licznikGwiazdek());
-        b.appendChild(pasek);
-
-        const tablica = ui.el('div', 'strefa strefa-tablica');
-        tablica.appendChild(ui.el('p', 'strefa-tytul', K.tablica));
-        const lista = ui.el('p', 'tablica-lista', K.pusto);
-        tablica.appendChild(lista);
-        b.appendChild(tablica);
-        const strefy = [{ el: tablica, id: 'tablica' }];
-
-        const pula = ui.el('div', 'kroki');
-        let wybrany = null;
-        const tokeny = tasuj(K.kroki.concat([K.pulapka])).map((krok) => {
-          const t = ui.el('button', 'krok');
-          t.appendChild(ui.el('span', null, krok.tekst));
-          t.dataset.id = krok.id;
-          t.addEventListener('click', () => {
-            if (t.dataset.zablokowany === '1') return;
-            ASZD.audio.dotyk();
-            tokeny.forEach((x) => x.classList.remove('krok-wybrany'));
-            t.classList.add('krok-wybrany');
-            wybrany = t;
-          });
-          pula.appendChild(t);
-          return t;
-        });
-        b.appendChild(pula);
-
-        const fb = ui.feedback();
-        b.appendChild(fb);
-
-        function upusc(_, token) {
-          const id = token.dataset.id;
-          if (id === K.pulapka.id) {
-            ASZD.audio.zle(); blad();
-            token.classList.add('krok-zly');
-            setTimeout(() => token.classList.remove('krok-zly'), 600);
-            fb.pokaz('zle', K.zlaPulapka);
-            return;
-          }
-          const oczekiwany = K.kroki[ulozone.length];
-          if (id !== oczekiwany.id) {
-            ASZD.audio.zle(); blad();
-            token.classList.add('krok-zly');
-            setTimeout(() => token.classList.remove('krok-zly'), 600);
-            fb.pokaz('zle', K.zlaKolejnosc(oczekiwany.tekst));
-            return;
-          }
-          token.dataset.zablokowany = '1';
-          token.classList.add('krok-ok');
-          token.classList.remove('krok-wybrany');
-          wybrany = null;
-          ulozone.push(oczekiwany);
-          ASZD.audio.dobrze(ulozone.length);
-          post.aktualizuj(ulozone.length);
-          lista.textContent = ulozone.map((s) => s.krotki).join('  →  ');
-          fb.pokaz('dobrze', K.zapisany(oczekiwany.tekst));
-          if (ulozone.length >= K.kroki.length) setTimeout(review, 1200);
-        }
-
-        tokeny.forEach((t) => ASZD.dnd.ustaw(t, strefy, upusc));
-        ASZD.dnd.strefyKlikalne(strefy, () => wybrany, upusc);
-      });
+      zadanie(5, 'r5-kolejnosc', 'kolejnosc', {
+        etykieta: K.etykieta, tytul: K.tytul, licznik: K.licznik, tablica: K.tablica, pusto: K.pusto,
+        kroki: K.kroki, pulapki: [K.pulapka], zlaPulapka: K.zlaPulapka,
+        zlaKolejnosc: K.zlaKolejnosc, zapisany: K.zapisany, karta: 'odpoczynek-w-planie'
+      }, review);
     }
-
     function review() {
       const R = D.kolejnosc.review;
       ekran(5, 'r5-koniec', (b) => {
@@ -637,6 +325,7 @@ ASZD.rozdzialy = (function () {
   const MAPA = { 1: rozdzial1, 2: rozdzial2, 3: rozdzial3, 4: rozdzial4, 5: rozdzial5 };
 
   return {
-    uruchom(nr, onNext) { MAPA[nr](onNext); }
+    uruchom(nr, onNext) { MAPA[nr](onNext); },
+    stop() { if (sesja && sesja.gra) { sesja.gra.stop(); sesja.gra = null; } }
   };
 })();

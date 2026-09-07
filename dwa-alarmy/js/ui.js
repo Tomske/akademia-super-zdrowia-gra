@@ -49,13 +49,13 @@ ASZD.ui = (function () {
     return p;
   }
 
-  function naglowekGry(nrRozdzialu, tytul, onPauza) {
+  function naglowekGry(nrRozdzialu, tytul, onPauza, etykieta) {
     const bar = el('header', 'topbar');
     const wstecz = el('button', 'iconbtn', '⏸');
     wstecz.setAttribute('aria-label', ASZD.T.pauza);
     wstecz.addEventListener('click', () => { ASZD.audio.klik(); onPauza(); });
     const info = el('div', 'topinfo');
-    info.appendChild(el('span', 'topnr', ASZD.T.rozdzialZ(nrRozdzialu)));
+    info.appendChild(el('span', 'topnr', etykieta || ASZD.T.rozdzialZ(nrRozdzialu)));
     info.appendChild(el('span', 'toptytul', tytul));
     bar.appendChild(info);
     bar.appendChild(wstecz);

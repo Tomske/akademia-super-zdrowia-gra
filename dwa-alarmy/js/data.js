@@ -376,5 +376,78 @@ ASZD.T = {
   jeszczeRaz: 'POWTÓRZ NA TRZY GWIAZDKI',
   obserwuj: function (s) { return 'Popatrz spokojnie… ' + s; },
   terazWybierz: 'TERAZ WYBIERZ PANELE',
-  inneGry: 'Inne gry Akademii'
+  inneGry: 'Inne gry Akademii',
+
+  /* bohater i moc */
+  wybierzBohatera: 'WYBIERZ BOHATERA',
+  wybierzBohateraOpis: 'Twój bohater idzie z tobą przez całą grę. Gdy się potkniesz, pomoże jedną mocą na rozdział.',
+  gramJako: function (imie) { return 'GRAM JAKO ' + imie.toUpperCase(); },
+  twojBohater: 'Twój bohater',
+  poziomBohatera: function (n) { return 'Poziom ' + n; },
+  xpZdobyte: function (n) { return '+' + n + ' do doświadczenia bohatera'; },
+  zmienBohatera: 'ZMIEŃ BOHATERA',
+  mocPodpowiedz: 'Twój bohater pomógł. Teraz wybierz spokojnie.',
+
+  /* Gluton X */
+  coSieDzieje: 'Co się dzieje w Akademii?',
+
+  /* album */
+  album: 'ALBUM KART',
+  albumOpis: 'Każde dobre trafienie zostawia kartę. Złote karty są za komplet gwiazdek. Dotknij karty, żeby ją przeczytać.',
+  albumLicznik: function (a, b, z) { return 'Karty: ' + a + ' z ' + b + (z ? '  •  złote: ' + z : ''); },
+  kartaNowa: 'Nowa karta w albumie',
+  kartaZlota: 'Złota karta',
+  kartaNieznana: 'Jeszcze nieodkryta',
+  zrodlo: 'Źródło',
+
+  /* dyżur */
+  dyzur: 'DYŻUR W AKADEMII',
+  dyzurEtykieta: 'Dyżur • sytuacja z życia',
+  dyzurOpis: 'Trzy krótkie sytuacje na dziś. Jutro będą inne. Każdy dyżur to odznaka i karta do albumu.',
+  dyzurStart: 'ZACZNIJ DZISIEJSZY DYŻUR',
+  dyzurZrobiony: 'Dzisiejszy dyżur zrobiony. Wróć jutro po nowe sytuacje albo powtórz dzisiejsze dla treningu.',
+  dyzurJeszcze: 'POWTÓRZ DLA TRENINGU',
+  dyzurSytuacja: function (i, n) { return 'Sytuacja ' + i + ' z ' + n; },
+  dyzurKoniec: 'Dyżur zaliczony',
+  dyzurPowtorkaKoniec: 'Trening zaliczony',
+  dyzurSeria: function (n) { return n > 1 ? 'Seria: ' + n + ' dni z rzędu. Wróć jutro, żeby ją podtrzymać.' : 'Pierwszy dzień serii. Wróć jutro, żeby ją podtrzymać.'; },
+  dyzurZablokowany: 'Dyżur odblokuje się po rozdziale 2.',
+  seria: 'Seria dni',
+  odznaki: 'Odznaki',
+  sytuacje: 'Sytuacje',
+
+  /* trening */
+  trening: 'TRENING: CICHY SYGNAŁ',
+  treningOpis: 'Znajdź panele, które pulsują w jednym rytmie, wśród coraz głośniejszego hałasu. Trzy życia. Jak wysoko dojdziesz?',
+  treningStart: 'ZACZNIJ OD POZIOMU 1',
+  treningJeszcze: 'JESZCZE RAZ',
+  treningPoziomOpis: function (r, n) { return 'Wśród ' + n + ' paneli ' + r + ' pulsują w jednym rytmie. Popatrz, potem wybierz.'; },
+  treningKoniec: 'Koniec treningu',
+  treningMistrz: 'Mistrz cichego sygnału!',
+  treningZablokowany: 'Trening odblokuje się po rozdziale 2.',
+  poziom: function (n) { return 'Poziom ' + n; },
+  rekord: 'Rekord',
+  nowyRekord: 'Nowy rekord!',
+  rekordJest: function (n) { return 'Twój rekord: poziom ' + n + '.'; },
+  zycia: 'Życia',
+
+  /* misja na dziś */
+  misjaNaDzis: 'MISJA NA DZIŚ',
+  misjaOpis: 'Jedno małe zadanie poza ekranem. Jutro gra zapyta, czy się udało.',
+  misjaPrzyjmuje: 'PRZYJMUJĘ MISJĘ',
+  misjaPytanie: 'Wczorajsza misja: udało się?',
+  misjaTak: 'TAK, ZROBIONE',
+  misjaNie: 'NIE TYM RAZEM',
+  misjaTakOdp: 'Brawo. To liczy się bardziej niż gwiazdki. Karta do albumu za misję.',
+  misjaNieOdp: 'W porządku. Misje są po to, żeby próbować. Dostaniesz nową.',
+
+  /* pokaż rodzicowi */
+  pokazRodzicowi: 'POKAŻ RODZICOWI',
+  powiedzRodzicowi: 'Powiedz rodzicowi trzy rzeczy',
+  pytanieDlaRodzica: 'Pytanie dla rodzica',
+  wrocDoWyniku: 'WRÓĆ DO WYNIKU',
+
+  /* lektor */
+  lektor: 'LEKTOR: ',
+  lektorBrak: 'Ta przeglądarka nie ma polskiego głosu, lektor jest niedostępny.'
 };
