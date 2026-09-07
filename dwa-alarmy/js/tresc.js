@@ -96,10 +96,10 @@ ASZD.DYZUR = [
     opis: 'Senek kończy dzień. Znajdź trzy rzeczy w pokoju, które pomagają dobrze spać.',
     potrzeba: 3, licznik: 'Znalezione pomocniki', powtorka: 'To już masz. Poszukaj innego szczegółu.',
     punkty: [
-      { id: 'budzik', etykieta: 'BUDZIK', x: 50, y: 42, r: 8, dobry: true, tekst: 'Budzik nastawiony na stałą porę. Ciało lubi rytm: kładzenie się o tej samej godzinie ułatwia zasypianie.' },
-      { id: 'woda', etykieta: 'WODA', x: 58, y: 43, r: 7, dobry: true, tekst: 'Szklanka wody przy łóżku. Wieczorem łyk, nie cały bidon, żeby nie wstawać w nocy.' },
+      { id: 'budzik', etykieta: 'BUDZIK', x: 47, y: 42, r: 6, dobry: true, tekst: 'Budzik nastawiony na stałą porę. Ciało lubi rytm: kładzenie się o tej samej godzinie ułatwia zasypianie.' },
+      { id: 'woda', etykieta: 'WODA', x: 60, y: 43, r: 6, dobry: true, tekst: 'Szklanka wody przy łóżku. Wieczorem łyk, nie cały bidon, żeby nie wstawać w nocy.' },
       { id: 'lista', etykieta: 'LISTA', x: 50, y: 56, r: 9, dobry: true, tekst: 'Lista wieczornych kroków. Ta sama kolejność co wieczór uspokaja i mówi ciału: idzie sen.' },
-      { id: 'okno', etykieta: 'OKNO', x: 74, y: 22, r: 9, dobry: false, tekst: 'Za oknem jasno. Zasłona pomaga, ale zadanie jest o tym, co Senek robi, nie o pogodzie.' },
+      { id: 'okno', etykieta: 'OKNO', x: 80, y: 10, r: 8, dobry: false, tekst: 'Za oknem jasno. Zasłona pomaga, ale zadanie jest o tym, co Senek robi, nie o pogodzie.' },
       { id: 'plecak', etykieta: 'PLECAK', x: 8, y: 82, r: 7, dobry: false, tekst: 'Plecak na jutro. Dobry nawyk, ale to przygotowanie do szkoły, nie do snu.' },
       { id: 'kapcie', etykieta: 'KAPCIE', x: 40, y: 80, r: 7, dobry: false, tekst: 'Kapcie. Wygodne, ale nic nie mówią o zasypianiu.' }
     ]
@@ -297,6 +297,205 @@ ASZD.DYZUR = [
     ],
     zle: { udaje: 'Udawanie nie pomaga zrozumieć. Za godzinę zadanie będzie tak samo niejasne, tylko czasu będzie mniej.', sciaga: 'Przepisany wynik nie zostaje w głowie. Pytanie zostaje.' },
     dobrze: 'Prośba o pomoc to umiejętność. Bohater Akademii pyta, zamiast udawać. Zwykle okazuje się, że nie tylko on nie zrozumiał.'
+  },
+
+  /* ---------- druga pula: 14 sytuacji, żeby starczyło na miesiąc bez powtórek ---------- */
+  {
+    id: 'nie-chce-mi-sie', typ: 'wybor', obraz: 'dyzur-plac', karta: 'zmeczenie-zlosc',
+    tytul: 'Nie chce mi się',
+    sytuacja: { naglowek: 'WF', tresc: 'Kolega, który zwykle pierwszy biegnie na boisko, dziś mówi "nie chce mi się" i siada na ławce. Ma podkrążone oczy. Co myślisz?' },
+    opcje: [
+      { id: 'zmeczony', tekst: 'MOŻE JEST ZMĘCZONY. ZAPYTAM, JAK SPAŁ', dobry: true },
+      { id: 'leniwy', tekst: 'LENIUCH. POWIEM MU, ŻEBY SIĘ RUSZYŁ', dobry: false },
+      { id: 'obrazil', tekst: 'PEWNIE SIĘ NA MNIE OBRAZIŁ', dobry: false }
+    ],
+    zle: { leniwy: 'Zmęczenie często wygląda jak lenistwo. Zmiana zachowania plus podkrążone oczy to sygnał, nie wada charakteru.', obrazil: 'To domysł bez dowodu. Zanim uznasz, że chodzi o ciebie, sprawdź prostsze wyjaśnienie: zmęczenie.' },
+    dobrze: 'Zmiana zachowania to cichy sygnał. Zmęczony człowiek nie ma siły biegać, a czasem nie ma siły nawet o tym powiedzieć.'
+  },
+  {
+    id: 'przed-zawodami', typ: 'karty', obraz: 'r1-koniec', karta: 'hipoteza',
+    tytul: 'Przed zawodami',
+    instrukcja: function (i, n) { return 'Zdanie ' + i + ' z ' + n + '. Fakt, hipoteza czy domysł?'; },
+    naglowekKarty: 'CO MÓWI SPRINTIX', licznik: 'Uporządkowane zdania',
+    zle: 'Czy to widać albo da się zmierzyć? Czy to wyjaśnienie do sprawdzenia? Czy zdanie bez dowodu?',
+    karty: [
+      { id: 'serce', tekst: 'Serce bije mi szybko.', kat: 'fakt' },
+      { id: 'rece', tekst: 'Mam zimne ręce.', kat: 'fakt' },
+      { id: 'trema', tekst: 'Może to trema, nie choroba.', kat: 'hipoteza' },
+      { id: 'woda', tekst: 'Może za mało piłem dziś wody.', kat: 'hipoteza' },
+      { id: 'przegram', tekst: 'Na pewno przegram.', kat: 'domysl' },
+      { id: 'smiech', tekst: 'Wszyscy będą się śmiać.', kat: 'domysl' }
+    ]
+  },
+  {
+    id: 'po-szkole', typ: 'kolejnosc', obraz: 'pauza', karta: 'rece-20',
+    tytul: 'Po powrocie ze szkoły',
+    opis: 'Ułóż popołudnie tak, żeby starczyło sił na wszystko. Jedna rzecz zjada czas.',
+    licznik: 'Ułożone kroki', tablica: 'PLAN NA POPOŁUDNIE • UPUŚĆ TUTAJ', pusto: 'Co robisz zaraz po wejściu do domu?',
+    kroki: [
+      { id: 'rece', tekst: 'UMYJ RĘCE', krotki: 'RĘCE' },
+      { id: 'obiad', tekst: 'ZJEDZ OBIAD', krotki: 'OBIAD' },
+      { id: 'ruch', tekst: 'CHWILA NA PODWÓRKU', krotki: 'RUCH' },
+      { id: 'lekcje', tekst: 'ODRÓB LEKCJE', krotki: 'LEKCJE' }
+    ],
+    pulapki: [{ id: 'ekran', tekst: 'OD RAZU NA TABLET' }],
+    zlaPulapka: 'Tablet od razu po szkole zjada popołudnie. Najpierw ciało: ręce, jedzenie, ruch.',
+    zlaKolejnosc: function (t) { return 'To jest w planie, ale nie teraz. Najpierw: ' + t + '.'; },
+    zapisany: function (t) { return 'Krok zapisany: ' + t; }
+  },
+  {
+    id: 'nowy-uczen', typ: 'role', obraz: 'menu', karta: 'ciche-potrzeby',
+    tytul: 'Nowy uczeń w klasie',
+    instrukcja: 'Do klasy przyszedł Tomek. Stoi sam przy drzwiach i nikogo nie zna. Kto z drużyny pomoże w każdym kroku?',
+    licznik: 'Przydzielone zadania', ilu: 3,
+    krok: function (i) { return 'KROK ' + i + ' Z 3'; },
+    zadania: [
+      { id: 'przywitaj', tekst: 'Podejdź pierwszy, przywitaj się i zapytaj, jak ma na imię', bohater: 'Uśmiechanka' },
+      { id: 'boisko', tekst: 'Zabierz go na przerwie na boisko, żeby pobiegał z innymi', bohater: 'Sprintix' },
+      { id: 'zasady', tekst: 'Wytłumacz spokojnie, jak działa plan lekcji i gdzie co jest', bohater: 'Mózguś' }
+    ],
+    dystraktory: ['Energuś', 'Kropelka', 'Witaminka', 'Senek'],
+    dobrze: function (imie) { return imie + ' bierze ten krok. Tomek zaczyna się uśmiechać.'; },
+    zle: function (imie) { return imie + ' chętnie pomoże, ale ten krok lepiej pasuje do innej mocy.'; }
+  },
+  {
+    id: 'boli-glowa', typ: 'wybor', obraz: 'r2-koniec', karta: 'pragnienie',
+    tytul: 'Boli głowa po lekcjach',
+    sytuacja: { naglowek: 'PO SZKOLE', tresc: 'Witaminka mówi, że boli ją głowa. Był upał, a jej bidon jest pełny, bo zapomniała pić. Co robisz najpierw?' },
+    opcje: [
+      { id: 'woda', tekst: 'PODAJĘ WODĘ I PROPONUJĘ CHWILĘ W CIENIU', dobry: true },
+      { id: 'tablet', tekst: 'DAJĘ TABLET, ŻEBY SIĘ ROZERWAŁA', dobry: false },
+      { id: 'nic', tekst: 'SAMO PRZEJDZIE, IDZIEMY DALEJ', dobry: false }
+    ],
+    zle: { tablet: 'Ekran nie pomoże, gdy ciału brakuje wody. Najpierw sprawdź prostą przyczynę.', nic: 'Pełny bidon po upalnym dniu to wskazówka. Głowa boli często wtedy, gdy za mało pijemy.' },
+    dobrze: 'Pełny bidon po upale to wskazówka: ciało dostało za mało wody. Woda i cień to pierwszy krok, dopiero potem myślimy dalej.'
+  },
+  {
+    id: 'plac', typ: 'hotspoty', obraz: 'dyzur-plac', karta: 'ludzie-najpierw',
+    tytul: 'Kto pomoże, gdy coś się stanie?',
+    opis: 'Na placu jest tłum i dwie wielkie strzałki. Znajdź trzy rzeczy, które naprawdę zwiększają bezpieczeństwo.',
+    potrzeba: 3, licznik: 'Znalezione', powtorka: 'To już masz. Poszukaj innego szczegółu.',
+    punkty: [
+      { id: 'kask', etykieta: 'KASK', x: 38, y: 77, r: 8, dobry: true, tekst: 'Kask na rowerze. Chroni głowę, zanim cokolwiek się stanie. Bezpieczeństwo zaczyna się przed wypadkiem.' },
+      { id: 'ratownik', etykieta: 'RATOWNIK', x: 9, y: 50, r: 9, dobry: true, tekst: 'Osoba z krzyżem na ubraniu i tabletem. Wiesz, do kogo podejść, gdy ktoś potrzebuje pomocy.' },
+      { id: 'kropelka', etykieta: 'KROPELKA', x: 62, y: 60, r: 8, dobry: true, tekst: 'Kropelka z wodą w tłumie. W upale i ścisku woda to bezpieczeństwo, nie luksus.' },
+      { id: 'zielona', etykieta: 'ZIELONA STRZAŁKA', x: 22, y: 10, r: 10, dobry: false, tekst: 'Wielka zielona strzałka. Głośna i widoczna, ale sama nie mówi, dokąd jest bezpiecznie iść.' },
+      { id: 'niebieska', etykieta: 'NIEBIESKA STRZAŁKA', x: 70, y: 10, r: 10, dobry: false, tekst: 'Wielka niebieska strzałka. To samo: hałas, nie informacja o ludziach.' },
+      { id: 'starszy', etykieta: 'STARSZY PAN', x: 88, y: 62, r: 8, dobry: false, tekst: 'Starszy pan rozmawia z dziewczynką. Miło, ale to nie on ma tu apteczkę.' }
+    ]
+  },
+  {
+    id: 'sklamac', typ: 'wybor', obraz: 'r3-weryfikacja', karta: 'zatrzymaj-powiedz',
+    tytul: 'Powiedz, że to nie my',
+    sytuacja: { naglowek: 'PRZERWA', tresc: 'Kolega stłukł doniczkę na korytarzu i prosi: "powiedz, że to nie my". Nauczycielka już idzie. Co robisz?' },
+    opcje: [
+      { id: 'prawda', tekst: 'MÓWIĘ, CO SIĘ STAŁO, I ŻE TO BYŁ WYPADEK', dobry: true },
+      { id: 'klamie', tekst: 'MÓWIĘ, ŻE NIC NIE WIDZIAŁEM', dobry: false },
+      { id: 'uciekam', tekst: 'ODCHODZĘ, ŻEBY NIE BYĆ W TO WMIESZANYM', dobry: false }
+    ],
+    zle: { klamie: 'Kłamstwo trzeba potem pilnować. Wypadek to nie wina, a prawda powiedziana spokojnie kończy sprawę szybciej.', uciekam: 'Odejście zostawia kolegę samego z problemem. Zostań i pomóż powiedzieć, jak było.' },
+    dobrze: 'Wypadek to nie wina. Spokojne "stłukliśmy przez przypadek, posprzątamy" kończy sprawę w minutę, a kłamstwo ciągnie się tygodniami.'
+  },
+  {
+    id: 'po-nocy', typ: 'karty', obraz: 'final', karta: 'sen-9-12',
+    tytul: 'Zmęczony po nocy',
+    instrukcja: function (i, n) { return 'Zdanie ' + i + ' z ' + n + '. Fakt, hipoteza czy domysł?'; },
+    naglowekKarty: 'PORANEK SENKA', licznik: 'Uporządkowane zdania',
+    zle: 'Czy to widać albo da się zmierzyć? Czy to wyjaśnienie do sprawdzenia? Czy zdanie bez dowodu?',
+    karty: [
+      { id: 'ziewam', tekst: 'Ziewam od rana.', kat: 'fakt' },
+      { id: 'polnoc', tekst: 'Zasnąłem po północy.', kat: 'fakt' },
+      { id: 'zamalo', tekst: 'Może spałem za krótko.', kat: 'hipoteza' },
+      { id: 'kolacja', tekst: 'Może późna kolacja nie dała mi zasnąć.', kat: 'hipoteza' },
+      { id: 'nudna', tekst: 'Na pewno lekcja będzie nudna.', kat: 'domysl' },
+      { id: 'zauwazy', tekst: 'Nikt na pewno nie zauważy, że jestem zmęczony.', kat: 'domysl' }
+    ]
+  },
+  {
+    id: 'skaleczenie', typ: 'kolejnosc', obraz: 'r3-glosny', karta: 'ludzie-najpierw',
+    tytul: 'Ktoś się skaleczył',
+    opis: 'Kolega rozciął kolano na boisku. Ułóż kroki po kolei. Jedna rzecz tu nie pasuje.',
+    licznik: 'Ułożone kroki', tablica: 'CO PO KOLEI • UPUŚĆ TUTAJ', pusto: 'Od czego zaczynasz?',
+    kroki: [
+      { id: 'dorosly', tekst: 'ZAWOŁAJ DOROSŁEGO', krotki: 'DOROSŁY' },
+      { id: 'woda', tekst: 'PRZEMYJ WODĄ', krotki: 'WODA' },
+      { id: 'plaster', tekst: 'PLASTER Z APTECZKI', krotki: 'PLASTER' },
+      { id: 'powiedz', tekst: 'POWIEDZ, JAK TO SIĘ STAŁO', krotki: 'POWIEDZ' }
+    ],
+    pulapki: [{ id: 'dmuchnij', tekst: 'DMUCHNIJ I GRAJ DALEJ' }],
+    zlaPulapka: 'Dmuchanie nie czyści rany, a granie dalej z otwartym kolanem to zły pomysł. Najpierw dorosły.',
+    zlaKolejnosc: function (t) { return 'To jest w planie, ale nie teraz. Najpierw: ' + t + '.'; },
+    zapisany: function (t) { return 'Krok zapisany: ' + t; }
+  },
+  {
+    id: 'babcia', typ: 'role', obraz: 'pauza', karta: 'odpoczynek-w-planie',
+    tytul: 'Babcia przyjechała zmęczona',
+    instrukcja: 'Babcia jechała pociągiem cztery godziny i siada ciężko na krześle. Kto z drużyny pomoże w każdym kroku?',
+    licznik: 'Przydzielone zadania', ilu: 3,
+    krok: function (i) { return 'KROK ' + i + ' Z 3'; },
+    zadania: [
+      { id: 'woda', tekst: 'Przynieś szklankę wody, zanim babcia o nią poprosi', bohater: 'Kropelka' },
+      { id: 'odpoczynek', tekst: 'Zaproponuj chwilę ciszy i odpoczynku, zanim zaczną się rozmowy', bohater: 'Senek' },
+      { id: 'rozmowa', tekst: 'Usiądź obok i zapytaj, jak minęła podróż, i posłuchaj do końca', bohater: 'Uśmiechanka' }
+    ],
+    dystraktory: ['Energuś', 'Sprintix', 'Witaminka', 'Mózguś'],
+    dobrze: function (imie) { return imie + ' bierze ten krok. Babcia oddycha z ulgą.'; },
+    zle: function (imie) { return imie + ' pomoże w czym innym. Pomyśl, czyja moc pasuje do tego kroku.'; }
+  },
+  {
+    id: 'telefony', typ: 'wybor', obraz: 'menu', karta: 'ruch-60',
+    tytul: 'Wszyscy patrzą w telefony',
+    sytuacja: { naglowek: 'DŁUGA PRZERWA', tresc: 'Dwadzieścia minut przerwy, ładna pogoda, a cała klasa siedzi w telefonach. Energuś chce coś zaproponować. Co?' },
+    opcje: [
+      { id: 'berek', tekst: 'CHODŹCIE NA BOISKO, PIĘĆ MINUT BERKA', dobry: true },
+      { id: 'zabrac', tekst: 'ZABIERAM WSZYSTKIM TELEFONY', dobry: false },
+      { id: 'tez', tekst: 'TEŻ SIADAM Z TELEFONEM', dobry: false }
+    ],
+    zle: { zabrac: 'Zabieranie nie działa i robi wroga. Lepiej zaproponować coś ciekawszego niż ekran.', tez: 'Też można, ale ruch na przerwie to jedna z najłatwiejszych godzin ruchu w ciągu dnia. Szkoda ją oddać.' },
+    dobrze: 'Zaproponowałeś coś lepszego zamiast zabraniać. Pięć minut biegania na przerwie liczy się do godziny ruchu dziennie.'
+  },
+  {
+    id: 'klotnia', typ: 'karty', obraz: 'r5-scena', karta: 'nazwij-emocje',
+    tytul: 'Kłótnia o piłkę',
+    instrukcja: function (i, n) { return 'Zdanie ' + i + ' z ' + n + '. Fakt, hipoteza czy domysł?'; },
+    naglowekKarty: 'CO POWIEDZIANO PO KŁÓTNI', licznik: 'Uporządkowane zdania',
+    zle: 'Czy to widać albo da się zmierzyć? Czy to wyjaśnienie do sprawdzenia? Czy zdanie bez dowodu?',
+    karty: [
+      { id: 'krzyk', tekst: 'Kuba krzyknął i rzucił piłkę.', kat: 'fakt' },
+      { id: 'lzy', tekst: 'Ola ma łzy w oczach.', kat: 'fakt' },
+      { id: 'zly', tekst: 'Może Kuba jest zły, bo przegrał.', kat: 'hipoteza' },
+      { id: 'zmeczona', tekst: 'Może Ola jest zmęczona i dlatego płacze.', kat: 'hipoteza' },
+      { id: 'nienawidzi', tekst: 'Kuba na pewno nienawidzi Oli.', kat: 'domysl' },
+      { id: 'specjalnie', tekst: 'Ola na pewno płacze specjalnie.', kat: 'domysl' }
+    ]
+  },
+  {
+    id: 'kolory', typ: 'wybor', obraz: 'r4-koniec', karta: 'piec-porcji',
+    tytul: 'Talerz w kolorach',
+    sytuacja: { naglowek: 'OBIAD', tresc: 'Witaminka patrzy na talerz: same ziemniaki i kotlet. Pyta, czego brakuje, żeby ciało dostało to, czego potrzebuje. Co odpowiesz?' },
+    opcje: [
+      { id: 'kolory', tekst: 'WARZYW W RÓŻNYCH KOLORACH, PO TROCHU KAŻDEGO DNIA', dobry: true },
+      { id: 'wiecej', tekst: 'WIĘCEJ ZIEMNIAKÓW', dobry: false },
+      { id: 'deser', tekst: 'DESERU, WTEDY BĘDZIE KOMPLET', dobry: false }
+    ],
+    zle: { wiecej: 'Ziemniaki to energia, ale nie dają wszystkich witamin. Brakuje kolorów.', deser: 'Deser jest na czasem. To nie on uzupełnia obiad, tylko warzywa i owoce.' },
+    dobrze: 'Każdy kolor warzyw i owoców to inne witaminy. Pięć porcji dziennie, w różnych kolorach, i talerz jest kompletny.'
+  },
+  {
+    id: 'brzuch-sprawdzian', typ: 'kolejnosc', obraz: 'r2-scena', karta: 'dlugi-wydech',
+    tytul: 'Brzuch przed sprawdzianem',
+    opis: 'Mózgusia boli brzuch ze stresu. Ułóż, co robi po kolei. Jedna rzecz tylko udaje pomoc.',
+    licznik: 'Ułożone kroki', tablica: 'CO PO KOLEI • UPUŚĆ TUTAJ', pusto: 'Od czego zaczyna?',
+    kroki: [
+      { id: 'oddech', tekst: 'TRZY DŁUGIE WYDECHY', krotki: 'ODDECH' },
+      { id: 'nazwij', tekst: 'NAZWIJ: TO STRES, NIE CHOROBA', krotki: 'NAZWIJ' },
+      { id: 'woda', tekst: 'ŁYK WODY I COŚ LEKKIEGO', krotki: 'WODA' },
+      { id: 'powiedz', tekst: 'POWIEDZ NAUCZYCIELCE, JAK SIĘ CZUJESZ', krotki: 'POWIEDZ' }
+    ],
+    pulapki: [{ id: 'udawaj', tekst: 'UDAWAJ, ŻE NIC SIĘ NIE DZIEJE' }],
+    zlaPulapka: 'Udawanie nie uspokaja brzucha. Zacznij od oddechu, to najszybszy sposób na spokój.',
+    zlaKolejnosc: function (t) { return 'To jest w planie, ale nie teraz. Najpierw: ' + t + '.'; },
+    zapisany: function (t) { return 'Krok zapisany: ' + t; }
   }
 ];
 
